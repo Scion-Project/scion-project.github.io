@@ -112,3 +112,4 @@ details summary{cursor:pointer;font-weight:600;list-style:none}
 details summary::after{content:"+";float:right;color:var(--green);font-weight:700}
 details[open] summary::after{content:"−"}
 details p{color:var(--mute);margin:10px 0 0}
+.banner{margin:8px 0 0}.banner img{width:100%;height:auto;border-radius:18px;border:1px solid var(--line);box-shadow:0 30px 80px rgba(0,0,0,.5)}
