@@ -101,3 +101,14 @@ footer{text-align:center;color:var(--mute);font-size:.88rem;padding:30px 20px 44
   .stats{grid-template-columns:1fr 1fr}
   .nav nav a:not(.gh){display:none}
 }
+.timeline{list-style:none;padding:0;margin:20px 0 0;border-left:2px solid var(--line)}
+.timeline li{position:relative;padding:0 0 22px 22px}
+.timeline li::before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px var(--bg)}
+.timeline li:last-child::before{background:var(--bg);border:2px solid var(--amber);width:8px;height:8px}
+.timeline time{display:block;font-family:var(--mono);font-size:.82rem;color:var(--lime)}
+.timeline span{color:#c3cbd8}
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:10px 0}
+details summary{cursor:pointer;font-weight:600;list-style:none}
+details summary::after{content:"+";float:right;color:var(--green);font-weight:700}
+details[open] summary::after{content:"−"}
+details p{color:var(--mute);margin:10px 0 0}

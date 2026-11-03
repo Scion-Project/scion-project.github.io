@@ -21,6 +21,7 @@
     <a href="#boot">How it boots</a>
     <a href="#install">Install</a>
     <a href="#source">Source</a>
+    <a href="#faq">FAQ</a>
     <a href="https://github.com/Scion-Project" class="gh">GitHub</a>
   </nav>
 </header>
@@ -188,6 +189,26 @@ SCION_KERNEL=../hackios-xnu-kernel starlte/mkinstaller.sh \
     <div><h4>Camera</h4><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/camera/hakios.exynos_camera.c">exynos_camera</a><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/camera/hakios.s2mpb02_torch.c">s2mpb02_torch</a></div>
   </div>
   <p class="sub">Deep dives: <a href="https://github.com/Scion-Project/hakios-starlte/blob/main/WIFI.md">Wi-Fi</a> · <a href="https://github.com/Scion-Project/hakios-starlte/blob/main/AUDIO.md">Audio</a> · <a href="https://github.com/Scion-Project/hakios-starlte/blob/main/CAMERA.md">Camera</a> · <a href="https://github.com/Scion-Project/hakios-starlte/blob/main/GPU.md">GPU</a> · <a href="https://github.com/Scion-Project/hakios-starlte/blob/main/BLUETOOTH.md">Bluetooth</a> · <a href="https://github.com/Scion-Project/hakios-starlte/blob/main/SENSORS.md">Sensors</a></p>
+</section>
+
+<section id="progress">
+  <h2>Progress</h2>
+  <ul class="timeline">
+    <li><time>3 Nov 2026</time><span>Zero-copy display fixed: the window server's frames are scanned out directly, with no flashing. Bluetooth pairing hang found and patched (in test). Iris camera driver written.</span></li>
+    <li><time>2 Nov 2026</time><span>Native UFS with persistent <code>/var</code>, Wi-Fi joined from Settings, speakers, front camera live in the stock Camera app, brightness slider, touch-boosted CPU governor.</span></li>
+    <li><time>1 Nov 2026</time><span>iOS 16.5 reaches SpringBoard on the Galaxy S9: six cores, Mali GPU through Panfrost, touch, battery.</span></li>
+    <li><time>Next</time><span>Passcode support, Face ID via the iris scanner, the full 4 GB of RAM for iOS, a native-aspect display, Bluetooth audio, then S9+ and Note9 bring-up.</span></li>
+  </ul>
+</section>
+
+<section id="faq">
+  <h2>FAQ</h2>
+  <details><summary>Is this an emulator?</summary><p>No. On the S9 the XNU kernel runs directly on the phone's CPU cores, with drivers for its real hardware. Only the Pixel 10 route uses a hypervisor or emulator.</p></details>
+  <details><summary>Can I use the App Store, iCloud or iMessage?</summary><p>No, and that isn't a goal. Nothing here makes a phone pass as an iPhone to Apple's servers.</p></details>
+  <details><summary>Why can't I just download an image?</summary><p>An image contains iOS's own files, which only Apple may distribute. You build yours from an IPSW you get yourself, and it stays yours.</p></details>
+  <details><summary>Can I go back to Android?</summary><p>Yes: restore the Boot and System backups you took in TWRP. The installer never touches EFS, the modem or recovery.</p></details>
+  <details><summary>Does it work on the Snapdragon S9?</summary><p>No. Only the Exynos 9810 models (G960F, G965F, N960F, and FD variants).</p></details>
+  <details><summary>How can I help?</summary><p>If you have an S9+ or a Note9, run the first test image and send us the log. Code, docs and driver reviews are welcome on <a href="https://github.com/Scion-Project">GitHub</a>.</p></details>
 </section>
 
 <section id="credits">
