@@ -137,7 +137,7 @@
       <ul class="need">
         <li>Galaxy S9 / S9+ / Note9, Exynos (<code>G960F</code>, <code>G965F</code>, <code>N960F</code>, FD models OK)</li>
         <li>Unlocked bootloader and TWRP</li>
-        <li>A Mac, or Linux with theos, to build</li>
+        <li>A Mac (or Linux) with about 20 GB free, to build</li>
         <li>The iOS 16.5 IPSW for iPhone10,3/10,6 (<code>20F66</code>), downloaded yourself from Apple</li>
       </ul>
     </div>
@@ -154,15 +154,11 @@
   <h3>Steps</h3>
   <ol class="steps">
     <li><b>Back up.</b> In TWRP, back up <code>Boot</code>, <code>System</code> and <code>EFS</code>, and copy the backup off the phone. EFS holds your IMEI.</li>
-    <li><b>Build.</b> Follow <a href="https://github.com/Scion-Project/scion-packaging#build">scion-packaging</a>:
-<pre><code># in hackios-xnu-kernel
-make unpack IPSW=/path/to/your.ipsw
-make starlte_defconfig &amp;&amp; make kernel &amp;&amp; make loader
-make images
-# in scion-packaging
-SCION_KERNEL=../hackios-xnu-kernel starlte/mkinstaller.sh \
-  -s ../hackios-xnu-kernel/userland/system.apfs</code></pre>
-<span class="note">The full recipe, including the small root and the S9+/Note9 universal zip, is in the README.</span></li>
+    <li><b>Build</b> on your computer, in one command (about 20 minutes and 20 GB of free disk):
+<pre><code>git clone https://github.com/Scion-Project/scion-packaging
+cd scion-packaging
+./build-installer.sh --ipsw /path/to/iPhone10,3,iPhone10,6_16.5_20F66_Restore.ipsw</code></pre>
+<span class="note">Add <code>--device star2lte</code>, <code>crownlte</code> or <code>all</code> for the S9+ and Note9. It checks your IPSW, lists any missing tools with the command to install them (macOS: Xcode command-line tools + <code>brew install sevenzip lld llvm bison meson ninja</code>), and writes the zip and its SHA-256 to <code>./out</code>. It downloads nothing from Apple. <a href="https://github.com/Scion-Project/scion-packaging#readme">Details and troubleshooting</a>.</span></li>
     <li><b>Flash.</b> Copy the zip to the phone, then in TWRP go to Install, pick the zip and swipe. It checks the model, writes <code>SYSTEM</code> and <code>BOOT</code>, and verifies both by SHA-256. It refuses to touch EFS, the modem or recovery.</li>
     <li><b>Reboot</b> to System.</li>
   </ol>
