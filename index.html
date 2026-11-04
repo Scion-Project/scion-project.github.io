@@ -46,7 +46,7 @@
 <div class="banner"><img src="banner.png" alt="Scion: iOS 16.5, natively on the Galaxy S9" width="1600" height="900"></div>
 
 <section class="stats">
-  <div><b>6</b><span>CPU cores, A55 + Exynos M3</span></div>
+  <div><b>8</b><span>CPU cores, A55 + Exynos M3</span></div>
   <div><b>25+</b><span>drivers written for XNU</span></div>
   <div><b>0</b><span>bytes of Apple code in the repos</span></div>
   <div><b>3</b><span>Exynos 9810 phones targeted</span></div>
@@ -62,7 +62,11 @@
     </div>
     <p>iOS 16.5 from the phone's own flash, through the kernel's own UFS driver, with <code>/private/var</code> kept between boots.</p>
     <div class="grid">
-      <div class="ok">Six cores, load- and touch-driven DVFS</div>
+      <div class="ok">All eight cores, load- and touch-driven DVFS</div>
+      <div class="ok">3.2 GB of RAM for iOS, up from 2 GB</div>
+      <div class="ok">Passcode lock in Settings and on the lock screen</div>
+      <div class="ok">Full-screen display in the panel's own shape</div>
+      <div class="ok">Kernel crypto on the CPU's AES/SHA instructions</div>
       <div class="ok">GPU: Mali-G72 via Mesa Panfrost</div>
       <div class="ok">AMOLED display, hardware scaling, zero-copy</div>
       <div class="ok">Brightness slider</div>
@@ -73,10 +77,12 @@
       <div class="ok">Speakers and system sounds</div>
       <div class="ok">Front camera in the stock Camera app</div>
       <div class="ok">USB log and console</div>
+      <div class="wip">Hardware video (H.264, HEVC): works, off by default</div>
+      <div class="wip">Real keychain encryption: written, off by default</div>
       <div class="wip">Bluetooth audio: pairing fix in test</div>
       <div class="wip">Sensors: orientation, proximity</div>
       <div class="wip">Microphone into iOS</div>
-      <div class="wip">Iris scanner as Face ID</div>
+      <div class="wip">Face ID and fingerprint: research, secure OS now starts</div>
       <div class="no">Cellular modem</div>
       <div class="no">Rear cameras</div>
       <div class="no">Apple services (not a goal)</div>
@@ -159,7 +165,7 @@
 cd scion-packaging
 ./build-installer.sh --ipsw /path/to/iPhone10,3,iPhone10,6_16.5_20F66_Restore.ipsw</code></pre>
 <span class="note">Add <code>--device star2lte</code>, <code>crownlte</code> or <code>all</code> for the S9+ and Note9. It checks your IPSW, lists any missing tools with the command to install them (macOS: Xcode command-line tools + <code>brew install sevenzip lld llvm bison meson ninja</code>), and writes the zip and its SHA-256 to <code>./out</code>. It downloads nothing from Apple. <a href="https://github.com/Scion-Project/scion-packaging#readme">Details and troubleshooting</a>.</span></li>
-    <li><b>Flash.</b> Copy the zip to the phone, then in TWRP go to Install, pick the zip and swipe. It checks the model, writes <code>SYSTEM</code> and <code>BOOT</code>, and verifies both by SHA-256. It refuses to touch EFS, the modem or recovery.</li>
+    <li><b>Flash.</b> Copy the zip to a microSD card or to <code>/sdcard</code> with <code>adb push</code> (<code>adb sideload</code> can't take a zip over 2 GB), then in TWRP go to Install, pick the zip and swipe. It checks the model, writes <code>SYSTEM</code> and <code>BOOT</code>, and verifies both by SHA-256. It refuses to touch EFS, the modem or recovery.</li>
     <li><b>Reboot</b> to System.</li>
   </ol>
   <p class="sub"><b>Leaving:</b> hold five fingers on the screen for 1.5 s to restart into TWRP with the log, or force-restart with Vol Down + Power. Restore your Boot and System backups to get Android back.</p>
@@ -196,10 +202,11 @@ cd scion-packaging
 <section id="progress">
   <h2>Progress</h2>
   <ul class="timeline">
+    <li><time>4 Nov 2026</time><span>All eight cores and 3.2 GB of RAM by default. Passcode lock. Hardware H.264 and HEVC decode through the phone's video block (AVPlayer at 17% of a core, down from 63%), off by default for now. A long-standing GPU crash fixed. Kinibi, the phone's secure OS, started under XNU. A one-command installer build.</span></li>
     <li><time>3 Nov 2026</time><span>Zero-copy display fixed: the window server's frames are scanned out directly, with no flashing. Bluetooth pairing hang found and patched (in test). Iris camera driver written.</span></li>
     <li><time>2 Nov 2026</time><span>Native UFS with persistent <code>/var</code>, Wi-Fi joined from Settings, speakers, front camera live in the stock Camera app, brightness slider, touch-boosted CPU governor.</span></li>
     <li><time>1 Nov 2026</time><span>iOS 16.5 reaches SpringBoard on the Galaxy S9: six cores, Mali GPU through Panfrost, touch, battery.</span></li>
-    <li><time>Next</time><span>Passcode support, Face ID via the iris scanner, the full 4 GB of RAM for iOS, a native-aspect display, Bluetooth audio, then S9+ and Note9 bring-up.</span></li>
+    <li><time>Next</time><span>Hardware video on by default, tearing, biometrics through the secure OS, Bluetooth audio, Metal, then S9+ and Note9 bring-up.</span></li>
   </ul>
 </section>
 
@@ -209,6 +216,7 @@ cd scion-packaging
   <details><summary>Can I use the App Store, iCloud or iMessage?</summary><p>No, and that isn't a goal. Nothing here makes a phone pass as an iPhone to Apple's servers.</p></details>
   <details><summary>Why can't I just download an image?</summary><p>An image contains iOS's own files, which only Apple may distribute. You build yours from an IPSW you get yourself, and it stays yours.</p></details>
   <details><summary>Can I go back to Android?</summary><p>Yes: restore the Boot and System backups you took in TWRP. The installer never touches EFS, the modem or recovery.</p></details>
+  <details><summary>Is the passcode real security?</summary><p>Not yet. It locks the screen, and real keychain encryption is written but off by default. Files aren't encrypted, there's no Secure Enclave, and an unlocked bootloader lets anyone with the phone flash a modified kernel. Don't rely on it to protect secrets.</p></details>
   <details><summary>Does it work on the Snapdragon S9?</summary><p>No. Only the Exynos 9810 models (G960F, G965F, N960F, and FD variants).</p></details>
   <details><summary>How can I help?</summary><p>If you have an S9+ or a Note9, run the first test image and send us the log. Code, docs and driver reviews are welcome on <a href="https://github.com/Scion-Project">GitHub</a>.</p></details>
 </section>
