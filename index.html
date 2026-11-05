@@ -38,7 +38,7 @@
   <p class="lede">Scion boots Apple's open-source <b>XNU</b> kernel directly on the <b>Galaxy S9</b>: no emulator and no Android underneath, with drivers written from scratch. iOS 16.5 runs on top, built on your own machine from your own IPSW.</p>
   <div class="cta">
     <a class="btn primary" href="#install">Try it on an S9</a>
-    <a class="btn" href="https://github.com/Scion-Project/hackios-xnu-kernel">Read the source</a>
+    <a class="btn" href="https://github.com/Scion-Project/scion-kernel">Read the source</a>
   </div>
   <p class="etym"><i>scion</i> /ˈsaɪ.ən/: a cutting grafted onto another plant's rootstock.</p>
 </section>
@@ -87,7 +87,7 @@
       <div class="no">Rear cameras</div>
       <div class="no">Apple services (not a goal)</div>
     </div>
-    <p class="links"><a href="https://github.com/Scion-Project/hakios-starlte">hakios-starlte →</a></p>
+    <p class="links"><a href="https://github.com/Scion-Project/scion-starlte">scion-starlte →</a></p>
   </article>
 
   <div class="two">
@@ -97,7 +97,7 @@
         <span class="pill amber">Testers wanted</span>
       </div>
       <p>Same SoC; written but never run. Its first image boots a minimal configuration and returns to TWRP after 120 s with a log. Send us that log.</p>
-      <p class="links"><a href="https://github.com/Scion-Project/hakios-star2lte">hakios-star2lte →</a></p>
+      <p class="links"><a href="https://github.com/Scion-Project/scion-star2lte">scion-star2lte →</a></p>
     </article>
     <article class="device">
       <div class="dev-head">
@@ -105,7 +105,7 @@
         <span class="pill amber">Testers wanted</span>
       </div>
       <p>Same as the S9+: the device repo is written, nobody has booted it yet. Your first run is the first.</p>
-      <p class="links"><a href="https://github.com/Scion-Project/hakios-crownlte">hakios-crownlte →</a></p>
+      <p class="links"><a href="https://github.com/Scion-Project/scion-crownlte">scion-crownlte →</a></p>
     </article>
   </div>
 
@@ -161,10 +161,10 @@
   <ol class="steps">
     <li><b>Back up.</b> In TWRP, back up <code>Boot</code>, <code>System</code> and <code>EFS</code>, and copy the backup off the phone. EFS holds your IMEI.</li>
     <li><b>Build</b> on your computer, in one command (about 20 minutes and 20 GB of free disk):
-<pre><code>git clone https://github.com/Scion-Project/scion-packaging
-cd scion-packaging
+<pre><code>git clone https://github.com/Scion-Project/scion-installer
+cd scion-installer
 ./build-installer.sh --ipsw /path/to/iPhone10,3,iPhone10,6_16.5_20F66_Restore.ipsw</code></pre>
-<span class="note">Add <code>--device star2lte</code>, <code>crownlte</code> or <code>all</code> for the S9+ and Note9. It checks your IPSW, lists any missing tools with the command to install them (macOS: Xcode command-line tools + <code>brew install sevenzip lld llvm bison meson ninja</code>), and writes the zip and its SHA-256 to <code>./out</code>. It downloads nothing from Apple. <a href="https://github.com/Scion-Project/scion-packaging#readme">Details and troubleshooting</a>.</span></li>
+<span class="note">Add <code>--device star2lte</code>, <code>crownlte</code> or <code>all</code> for the S9+ and Note9. It checks your IPSW, lists any missing tools with the command to install them (macOS: Xcode command-line tools + <code>brew install sevenzip lld llvm bison meson ninja</code>), and writes the zip and its SHA-256 to <code>./out</code>. It downloads nothing from Apple. <a href="https://github.com/Scion-Project/scion-installer#readme">Details and troubleshooting</a>.</span></li>
     <li><b>Flash.</b> Copy the zip to a microSD card or to <code>/sdcard</code> with <code>adb push</code> (<code>adb sideload</code> can't take a zip over 2 GB), then in TWRP go to Install, pick the zip and swipe. It checks the model, writes <code>SYSTEM</code> and <code>BOOT</code>, and verifies both by SHA-256. It refuses to touch EFS, the modem or recovery.</li>
     <li><b>Reboot</b> to System.</li>
   </ol>
@@ -174,9 +174,9 @@ cd scion-packaging
 <section id="source">
   <h2>Source</h2>
   <div class="repos">
-    <a href="https://github.com/Scion-Project/hackios-xnu-kernel"><b>hackios-xnu-kernel</b><span>XNU port, drivers, loader, tools · APSL 2.0 / MIT</span></a>
-    <a href="https://github.com/Scion-Project/hakios-starlte"><b>hakios-starlte</b><span>Galaxy S9: UEFI, configs, porting record</span></a>
-    <a href="https://github.com/Scion-Project/scion-packaging"><b>scion-packaging</b><span>TWRP installers, tooling only</span></a>
+    <a href="https://github.com/Scion-Project/scion-kernel"><b>scion-kernel</b><span>XNU port, drivers, loader, tools · APSL 2.0 / MIT</span></a>
+    <a href="https://github.com/Scion-Project/scion-starlte"><b>scion-starlte</b><span>Galaxy S9: UEFI, configs, porting record</span></a>
+    <a href="https://github.com/Scion-Project/scion-installer"><b>scion-installer</b><span>TWRP installers, tooling only</span></a>
     <a href="https://github.com/Scion-Project/scion-recovery"><b>scion-recovery</b><span>TWRP with APFS / HFS+ tools and log capture</span></a>
     <a href="https://github.com/Scion-Project/android_kernel_samsung_exynos9810"><b>android_kernel_samsung_exynos9810</b><span>The BSP the drivers' facts come from</span></a>
     <a href="https://github.com/Scion-Project/scion"><b>scion</b><span>The Pixel 10 app</span></a>
@@ -185,18 +185,18 @@ cd scion-packaging
   <h3>Exynos 9810 drivers</h3>
   <p class="sub">Written fresh for XNU from the hardware facts in Samsung's GPL BSP. No Linux code copied in.</p>
   <div class="drivers">
-    <div><h4>Display &amp; GPU</h4><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/gpu/hakios.exynos_dpu.c">exynos_dpu</a><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/gpu/hakios.s6e3ha8.c">s6e3ha8</a><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/gpu/hakios.mali.c">mali</a><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/gpu/hakios.backlight.cpp">backlight</a></div>
-    <div><h4>CPU &amp; SoC</h4><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/core/hakios.exynos_m3.c">exynos_m3</a><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/core/hakios.exynos_acpm.c">exynos_acpm</a><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/power/hakios.exynos_cpufreq.c">exynos_cpufreq</a><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/power/hakios.exynos_tmu.c">exynos_tmu</a><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/core/hakios.exynos_hsi2c.c">exynos_hsi2c</a><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/core/hakios.exynos_spi.c">exynos_spi</a></div>
-    <div><h4>Storage</h4><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/storage/hakios.ufshc.c">ufshc</a><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/storage/hakios.ext4.c">ext4</a></div>
-    <div><h4>Input &amp; sensors</h4><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/input/hakios.s6sy761.c">s6sy761</a><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/input/hakios.exynos_keys.c">exynos_keys</a><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/input/hakios.ssp.c">ssp</a></div>
-    <div><h4>Power</h4><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/power/hakios.max77705.c">max77705</a><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/power/hakios.s2mps18_rtc.c">s2mps18_rtc</a></div>
-    <div><h4>USB</h4><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/core/hakios.dwc3.c">dwc3</a><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/core/hakios.exynos_usb.c">exynos_usb</a></div>
-    <div><h4>Wi-Fi</h4><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/wifi/hakios.exynos_pcie.c">exynos_pcie</a><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/wifi/hakios.brcmfmac.c">brcmfmac</a><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/wifi/hakios.sta.c">sta</a></div>
-    <div><h4>Bluetooth</h4><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/bluetooth/hakios.bcm4361_bt.c">bcm4361_bt</a><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/bluetooth/hakios.bt.c">bt</a></div>
-    <div><h4>Audio</h4><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/audio/hakios.exynos_abox.c">exynos_abox</a><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/audio/hakios.max98512.c">max98512</a><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/audio/hakios.cs47l93.c">cs47l93</a></div>
-    <div><h4>Camera</h4><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/camera/hakios.exynos_camera.c">exynos_camera</a><a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/drivers/camera/hakios.s2mpb02_torch.c">s2mpb02_torch</a></div>
+    <div><h4>Display &amp; GPU</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/gpu/hakios.exynos_dpu.c">exynos_dpu</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/gpu/hakios.s6e3ha8.c">s6e3ha8</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/gpu/hakios.mali.c">mali</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/gpu/hakios.backlight.cpp">backlight</a></div>
+    <div><h4>CPU &amp; SoC</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/core/hakios.exynos_m3.c">exynos_m3</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/core/hakios.exynos_acpm.c">exynos_acpm</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/power/hakios.exynos_cpufreq.c">exynos_cpufreq</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/power/hakios.exynos_tmu.c">exynos_tmu</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/core/hakios.exynos_hsi2c.c">exynos_hsi2c</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/core/hakios.exynos_spi.c">exynos_spi</a></div>
+    <div><h4>Storage</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/storage/hakios.ufshc.c">ufshc</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/storage/hakios.ext4.c">ext4</a></div>
+    <div><h4>Input &amp; sensors</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/input/hakios.s6sy761.c">s6sy761</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/input/hakios.exynos_keys.c">exynos_keys</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/input/hakios.ssp.c">ssp</a></div>
+    <div><h4>Power</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/power/hakios.max77705.c">max77705</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/power/hakios.s2mps18_rtc.c">s2mps18_rtc</a></div>
+    <div><h4>USB</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/core/hakios.dwc3.c">dwc3</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/core/hakios.exynos_usb.c">exynos_usb</a></div>
+    <div><h4>Wi-Fi</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/wifi/hakios.exynos_pcie.c">exynos_pcie</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/wifi/hakios.brcmfmac.c">brcmfmac</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/wifi/hakios.sta.c">sta</a></div>
+    <div><h4>Bluetooth</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/bluetooth/hakios.bcm4361_bt.c">bcm4361_bt</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/bluetooth/hakios.bt.c">bt</a></div>
+    <div><h4>Audio</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/audio/hakios.exynos_abox.c">exynos_abox</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/audio/hakios.max98512.c">max98512</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/audio/hakios.cs47l93.c">cs47l93</a></div>
+    <div><h4>Camera</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/camera/hakios.exynos_camera.c">exynos_camera</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/camera/hakios.s2mpb02_torch.c">s2mpb02_torch</a></div>
   </div>
-  <p class="sub">Deep dives: <a href="https://github.com/Scion-Project/hakios-starlte/blob/main/WIFI.md">Wi-Fi</a> · <a href="https://github.com/Scion-Project/hakios-starlte/blob/main/AUDIO.md">Audio</a> · <a href="https://github.com/Scion-Project/hakios-starlte/blob/main/CAMERA.md">Camera</a> · <a href="https://github.com/Scion-Project/hakios-starlte/blob/main/GPU.md">GPU</a> · <a href="https://github.com/Scion-Project/hakios-starlte/blob/main/BLUETOOTH.md">Bluetooth</a> · <a href="https://github.com/Scion-Project/hakios-starlte/blob/main/SENSORS.md">Sensors</a></p>
+  <p class="sub">Deep dives: <a href="https://github.com/Scion-Project/scion-starlte/blob/main/WIFI.md">Wi-Fi</a> · <a href="https://github.com/Scion-Project/scion-starlte/blob/main/AUDIO.md">Audio</a> · <a href="https://github.com/Scion-Project/scion-starlte/blob/main/CAMERA.md">Camera</a> · <a href="https://github.com/Scion-Project/scion-starlte/blob/main/GPU.md">GPU</a> · <a href="https://github.com/Scion-Project/scion-starlte/blob/main/BLUETOOTH.md">Bluetooth</a> · <a href="https://github.com/Scion-Project/scion-starlte/blob/main/SENSORS.md">Sensors</a></p>
 </section>
 
 <section id="progress">
@@ -234,7 +234,7 @@ cd scion-packaging
 
 <section id="legal" class="legal">
   <h2>Legal</h2>
-  <p>Scion is an independent open-source research project, <b>not affiliated with, endorsed by, or connected to Apple, Samsung or Google</b>. These repositories contain no Apple software: no IPSWs, binaries, caches, keys or screenshots. Images are built on your machine from software you obtain yourself. Whether you may run it on non-Apple hardware is your decision and depends on where you live; see <a href="https://github.com/Scion-Project/hackios-xnu-kernel/blob/main/LEGAL.md">LEGAL.md</a>. Flashing can brick a phone, so back up first.</p>
+  <p>Scion is an independent open-source research project, <b>not affiliated with, endorsed by, or connected to Apple, Samsung or Google</b>. These repositories contain no Apple software: no IPSWs, binaries, caches, keys or screenshots. Images are built on your machine from software you obtain yourself. Whether you may run it on non-Apple hardware is your decision and depends on where you live; see <a href="https://github.com/Scion-Project/scion-kernel/blob/main/LEGAL.md">LEGAL.md</a>. Flashing can brick a phone, so back up first.</p>
 </section>
 
 </main>
