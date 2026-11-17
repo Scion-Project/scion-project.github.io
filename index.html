@@ -4,238 +4,439 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Scion Project: iOS's open kernel, grafted onto Android phones</title>
-<meta name="description" content="Apple's open-source XNU kernel booted natively on the Galaxy S9, S9+ and Note9 (Exynos 9810), and virtualised on the Pixel 10. Open-source drivers; every image built from your own IPSW.">
+<title>Scion: Apple's open-source XNU kernel on Android phones</title>
+<meta name="description" content="Scion runs Apple's open-source XNU kernel on Android phones, with drivers of its own. iOS 16.5 and iOS 27 start on the Galaxy S9 from one kernel tree; the Pixel 10 runs iOS 16.5 in a virtual machine. Every image is built on your own machine from your own copy of iOS.">
+<meta name="color-scheme" content="light dark">
 <meta property="og:title" content="Scion Project">
-<meta property="og:description" content="XNU and iOS 16.5, booted natively on the Galaxy S9. Our own drivers, nothing of Apple's in the repos.">
+<meta property="og:description" content="Apple's open-source XNU kernel on Android phones: iOS 16.5 and iOS 27 on the Galaxy S9, our own drivers, nothing of Apple's in the repositories.">
 <meta property="og:image" content="https://scion-project.github.io/banner.png">
 <meta property="og:image:width" content="1600">
 <meta property="og:image:height" content="900">
+<meta property="og:image:alt" content="Scion: Apple's open-source XNU kernel on Android phones. iOS 16.5 and iOS 27 on the Galaxy S9.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://scion-project.github.io/banner.png">
-<meta name="theme-color" content="#0a0c10">
+<meta name="theme-color" content="#f6f8f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0e12" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="logo.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header class="nav">
-  <a class="brand" href="#top"><img src="logo.svg" alt="" width="28" height="28"> Scion</a>
-  <nav>
-    <a href="#devices">Devices</a>
-    <a href="#boot">How it boots</a>
-    <a href="#install">Install</a>
-    <a href="#source">Source</a>
-    <a href="#faq">FAQ</a>
-    <a href="https://github.com/Scion-Project" class="gh">GitHub</a>
-  </nav>
+<a class="skip" href="#main">Skip to the content</a>
+
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="#main"><img src="logo.svg" alt="" width="28" height="28"><span>Scion</span></a>
+    <nav aria-label="Sections">
+      <a href="#aim">Aim</a>
+      <a href="#phones">Phones</a>
+      <a href="#versions">16.5 and 27</a>
+      <a href="#try">Try it</a>
+      <a href="#now">Now</a>
+      <a href="#problems">Problems</a>
+      <a class="gh" href="https://github.com/Scion-Project">GitHub</a>
+    </nav>
+  </div>
 </header>
 
-<main id="top">
+<main id="main">
 
-<section class="hero">
-  <img class="hero-logo" src="logo.svg" alt="Scion logo" width="120" height="120">
-  <h1>The iPhone's kernel,<br><span>grafted onto Android hardware.</span></h1>
-  <p class="lede">Scion boots Apple's open-source <b>XNU</b> kernel directly on the <b>Galaxy S9</b>: no emulator and no Android underneath, with drivers written from scratch. iOS 16.5 runs on top, built on your own machine from your own IPSW.</p>
+<section class="hero" aria-labelledby="hero-title">
+  <img class="hero-logo" src="logo.svg" alt="The Scion logo: a two-leaved shoot grafted onto a chip" width="96" height="96">
+  <p class="eyebrow">Scion Project</p>
+  <h1 id="hero-title">Apple's open-source kernel, <br>on Android phones.</h1>
+  <p class="lede">Scion runs <b>XNU</b>, the kernel under iOS, directly on the <b>Galaxy S9</b>: no emulator and no Android underneath, with drivers written for the phone's own hardware. <b>iOS 16.5</b> and <b>iOS 27</b> both start on it, from one kernel tree built on two of Apple's XNU releases. A contributor has run it on the Galaxy S9+. On the <b>Pixel 10</b>, iOS 16.5 runs in a virtual machine through the Scion app, and a bare-metal iOS 27 port has so far run only in QEMU.</p>
+  <p class="lede small">It is an experiment, not a finished system. You build every image yourself, on your own computer, from your own copy of iOS. These repositories contain no Apple software.</p>
   <div class="cta">
-    <a class="btn primary" href="#install">Try it on an S9</a>
-    <a class="btn" href="https://github.com/Scion-Project/scion-kernel">Read the source</a>
+    <a class="btn primary" href="#phones">What runs on each phone</a>
+    <a class="btn" href="#try">How to try it</a>
+    <a class="btn" href="https://github.com/Scion-Project/scion-kernel">The source</a>
   </div>
   <p class="etym"><i>scion</i> /ˈsaɪ.ən/: a cutting grafted onto another plant's rootstock.</p>
 </section>
 
-<div class="banner"><img src="banner.png" alt="Scion: iOS 16.5, natively on the Galaxy S9" width="1600" height="900"></div>
-
-<section class="stats">
-  <div><b>8</b><span>CPU cores, A55 + Exynos M3</span></div>
-  <div><b>25+</b><span>drivers written for XNU</span></div>
-  <div><b>0</b><span>bytes of Apple code in the repos</span></div>
-  <div><b>3</b><span>Exynos 9810 phones targeted</span></div>
+<section id="aim" aria-labelledby="aim-title">
+  <h2 id="aim-title">The aim</h2>
+  <p class="big">One kernel tree for every phone Scion runs on, running on the phones themselves, with Android kept beside it.</p>
+  <div class="cols">
+    <div>
+      <h3>One tree</h3>
+      <p>Scion's kernel is one tree built on two of Apple's XNU releases: xnu-8796 for iOS 16.5 and xnu-12377 for iOS 27. The drivers, the SoC layers and the phones' descriptions are shared; what differs is Apple's source and the changes made on it. The Galaxy S9 and the Pixel 10 are two machine configurations of the same iOS 27 tree, and the S9's audio and Bluetooth drivers build for both releases.</p>
+      <p class="src">Sources: scion-kernel <code>docs/two-bases.md</code>, <code>docs/ios27/PIXEL10.md</code>; xnu pull request 24; scion-kernel pull request 280.</p>
+    </div>
+    <div>
+      <h3>On the phone</h3>
+      <p>On the S9 the kernel runs on the phone's own eight cores. On the Pixel 10 the virtual machine is the route that works today; the bare-metal port, where Google's boot loader starts Scion's loader and the loader starts XNU, is written and runs in QEMU, and has not been run on a phone.</p>
+      <p class="src">Sources: scion-starlte <code>device.conf</code>; scion-frankel <code>README.md</code>, <code>device.conf</code>.</p>
+    </div>
+    <div>
+      <h3>Beside Android</h3>
+      <p>Not yet on the S9. Today installing iOS 16.5 replaces Android's system partition and installing iOS 27 erases Android's data; Android comes back from your backups. Choosing iOS or Android at power-on, with Android's data kept, is designed for the S9 and has not been run on a phone.</p>
+      <p class="src">Sources: scion-kernel <code>docs/dual-boot-s9.md</code>, <code>docs/ios27/INSTALL-S9.md</code>.</p>
+    </div>
+  </div>
 </section>
 
-<section id="devices">
-  <h2>Devices</h2>
+<section id="phones" aria-labelledby="phones-title">
+  <h2 id="phones-title">Phones, and what runs on each</h2>
+  <p>Every line below says one of three things, and only what the project's own records say. Dates are 2026.</p>
+  <ul class="legend" aria-label="What the states mean">
+    <li><span class="st seen">Seen on a phone</span> it ran on a real phone, on the date given.</li>
+    <li><span class="st built">Built, not yet run</span> the code exists and builds; nobody has run it on a phone, or not in this combination.</li>
+    <li><span class="st none">Not built</span> there is no code for it yet.</li>
+  </ul>
 
-  <article class="device main">
-    <div class="dev-head">
-      <h3>Galaxy S9 <small>SM-G960F · starlte · Exynos 9810</small></h3>
-      <span class="pill green">Daily-usable</span>
+  <article class="phone" aria-labelledby="s9-title">
+    <header class="phone-head">
+      <h3 id="s9-title">Galaxy S9 <small>SM-G960F · starlte · Exynos 9810</small></h3>
+      <p>The main phone. Both iOS versions start on it. Its record is <a href="https://github.com/Scion-Project/scion-starlte/blob/main/device.conf"><code>device.conf</code></a> (iOS 16.5) and <a href="https://github.com/Scion-Project/scion-kernel/blob/main/docs/ios27/INSTALL-S9.md">INSTALL-S9.md</a> (iOS 27).</p>
+    </header>
+    <div class="table-wrap" role="region" aria-labelledby="s9-cap" tabindex="0">
+    <table class="status">
+      <caption id="s9-cap">Galaxy S9: iOS 16.5 and iOS 27, part by part</caption>
+      <thead><tr><th scope="col">Part</th><th scope="col">iOS 16.5</th><th scope="col">iOS 27</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Boot to the home screen</th>
+          <td><span class="st seen">Seen on a phone</span> 1 to 3 November, from the phone's own flash</td>
+          <td><span class="st seen">Seen on a phone</span> 8 November; the first picture 18 to 40 seconds after boot</td></tr>
+        <tr><th scope="row">Cores and memory</th>
+          <td><span class="st seen">Seen on a phone</span> all eight cores, 3 November; 3.2 GB of RAM for iOS</td>
+          <td><span class="st seen">Seen on a phone</span> all eight cores; about 3.6 GB of RAM</td></tr>
+        <tr><th scope="row">Display, touch, brightness</th>
+          <td><span class="st seen">Seen on a phone</span> the panel, ten-finger touch, iOS's brightness slider</td>
+          <td><span class="st seen">Seen on a phone</span> 60 Hz, touch; the brightness slider needs a library the public build does not make yet</td></tr>
+        <tr><th scope="row">GPU (Mali-G72)</th>
+          <td><span class="st seen">Seen on a phone</span> OpenGL ES through Mesa's Panfrost</td>
+          <td><span class="st seen">Seen on a phone</span> OpenGL ES, or CoreAnimation's Metal renderer with Liquid Glass through Mesa's PanVK</td></tr>
+        <tr><th scope="row">Storage</th>
+          <td><span class="st seen">Seen on a phone</span> the system from the phone's flash; <code>/private/var</code> kept between boots if you format USERDATA for it</td>
+          <td><span class="st seen">Seen on a phone</span> the system on the phone's flash, read-write</td></tr>
+        <tr><th scope="row">Wi-Fi</th>
+          <td><span class="st seen">Seen on a phone</span> 3 November: joined from Settings (WPA2), DHCP, the Internet</td>
+          <td><span class="st seen">Seen on a phone</span> 13 November, on phone 1's work branch: joined WPA2, Settings listed the networks, packages fetched over https. <span class="st built">Built, not yet run</span> the merged kernel with Wi-Fi on by default (17 November); the firmware and iOS's service are separate root steps</td></tr>
+        <tr><th scope="row">Mobile network</th>
+          <td><span class="st built">Built, not yet run</span> the modem is in the 16.5 kernel and on by default since 17 November; the installer's pinned kernel (10 November) does not have it yet</td>
+          <td><span class="st seen">Seen on a phone</span> 13 November: SIM ready, registered on the network, data through <code>pdp_ip0</code> from user space. iOS shows it only with a root step, and data needs your operator's APN on the command line</td></tr>
+        <tr><th scope="row">Calls and SMS</th>
+          <td><span class="st none">Not built</span></td>
+          <td><span class="st none">Not built</span> the phone-call services are removed</td></tr>
+        <tr><th scope="row">Speakers and microphone</th>
+          <td><span class="st seen">Seen on a phone</span> 3 November: iOS's sounds through the speakers; the main microphone recorded by an app. Headphones: <span class="st built">Built, not yet run</span></td>
+          <td><span class="st seen">Seen on a phone</span> 9 November, in part: a tone through both speakers from the kernel's console; iOS's audio daemon loads Scion's driver. <span class="st built">Built, not yet run</span> the kernel and root step as merged on 17 November</td></tr>
+        <tr><th scope="row">Bluetooth</th>
+          <td><span class="st seen">Seen on a phone</span> 3 November: the chip from the USB console; Settings' switch on and scanning in iOS</td>
+          <td><span class="st seen">Seen on a phone</span> 9 November, in part: the chip brought up, iOS's Bluetooth stack ready. <span class="st built">Built, not yet run</span> as merged on 17 November</td></tr>
+        <tr><th scope="row">Motion sensors, rotation</th>
+          <td><span class="st seen">Seen on a phone</span> 3 November: orientation and proximity in iOS</td>
+          <td><span class="st seen">Seen on a phone</span> 12 November: accelerometer, gyroscope, the screen turning with the OpenGL ES compositor. With the Metal compositor a turn freezes the screen</td></tr>
+        <tr><th scope="row">Front camera</th>
+          <td><span class="st seen">Seen on a phone</span> 3 November: in the stock Camera app, 30 frames a second</td>
+          <td><span class="st none">Not built</span> for iOS: the kernel drives the sensor behind a switch that is off; no iOS app sees it</td></tr>
+        <tr><th scope="row">Rear cameras</th>
+          <td><span class="st none">Not built</span></td>
+          <td><span class="st none">Not built</span> for iOS: the kernel drives the sensors behind a switch that is off; no iOS app sees them</td></tr>
+        <tr><th scope="row">Battery</th>
+          <td><span class="st seen">Seen on a phone</span> 1 November: the level and the charger, read only</td>
+          <td><span class="st built">Built, not yet run</span> the fuel gauge, read only, on by default since 17 November</td></tr>
+        <tr><th scope="row">Heat protection</th>
+          <td><span class="st seen">Seen on a phone</span> since 1 November: temperatures read, the cores and the GPU slowed by heat. The stop at 110 °C has not yet been reached</td>
+          <td><span class="st built">Built, not yet run</span> added 17 November: temperatures read by default, the GPU slowed from 85 °C, the run ended at 110 °C</td></tr>
+        <tr><th scope="row">Package manager (Sileo)</th>
+          <td><span class="st built">Built, not yet run</span> Sileo is in the installer's image; refreshing sources and installing packages have not been tried</td>
+          <td><span class="st seen">Seen on a phone</span> 13 November: Sileo opens and lists packages; apt installs, removes and keeps packages across restarts. Installing from Sileo's own screen not yet</td></tr>
+        <tr><th scope="row">Passcode</th>
+          <td><span class="st seen">Seen on a phone</span> in Settings and on the lock screen. It protects keychain items only; files are not encrypted</td>
+          <td><span class="st built">Built, not yet run</span> off by default and not in the documented build: a screen lock whose calls from iOS ran on a phone; the lock screen's keypad not yet tried. Nothing is encrypted</td></tr>
+        <tr><th scope="row">USB log and console</th>
+          <td><span class="st seen">Seen on a phone</span></td>
+          <td><span class="st seen">Seen on a phone</span></td></tr>
+        <tr><th scope="row">Sleep</th>
+          <td><span class="st none">Not built</span> the phone never sleeps; an idle core waits, powered</td>
+          <td><span class="st none">Not built</span> the same</td></tr>
+      </tbody>
+    </table>
     </div>
-    <p>iOS 16.5 from the phone's own flash, through the kernel's own UFS driver, with <code>/private/var</code> kept between boots.</p>
-    <div class="grid">
-      <div class="ok">All eight cores, load- and touch-driven DVFS</div>
-      <div class="ok">3.2 GB of RAM for iOS, up from 2 GB</div>
-      <div class="ok">Passcode lock in Settings and on the lock screen</div>
-      <div class="ok">Full-screen display in the panel's own shape</div>
-      <div class="ok">Kernel crypto on the CPU's AES/SHA instructions</div>
-      <div class="ok">GPU: Mali-G72 via Mesa Panfrost</div>
-      <div class="ok">AMOLED display, hardware scaling, zero-copy</div>
-      <div class="ok">Brightness slider</div>
-      <div class="ok">Touch, buttons, haptics</div>
-      <div class="ok">Battery, charger, thermal limits, RTC</div>
-      <div class="ok">Native UFS storage, persistent data</div>
-      <div class="ok">Wi-Fi joined from Settings (WPA2)</div>
-      <div class="ok">Speakers and system sounds</div>
-      <div class="ok">Front camera in the stock Camera app</div>
-      <div class="ok">USB log and console</div>
-      <div class="ok">Hardware video: H.264 and HEVC through the MFC block</div>
-      <div class="ok">Keychain encryption keyed to your passcode</div>
-      <div class="wip">Bluetooth audio: pairing fix in test</div>
-      <div class="wip">Sensors: orientation, proximity</div>
-      <div class="wip">Microphone into iOS</div>
-      <div class="wip">Face ID and fingerprint: research, secure OS now starts</div>
-      <div class="no">Cellular modem</div>
-      <div class="no">Rear cameras</div>
-      <div class="no">Apple services (not a goal)</div>
-    </div>
-    <p class="links"><a href="https://github.com/Scion-Project/scion-starlte">scion-starlte →</a></p>
+    <p class="note">On iOS 16.5 the S9 also decodes H.264 and HEVC video in hardware (seen 4 November). On iOS 27, everything switched on by default on 17 November (the sensors, Wi-Fi, audio, Bluetooth, the modem, the battery's gauge, restart and power off from iOS) has been built together and <b>not yet run on a phone together</b>; how far each was seen on its own is in the table, and the battery's gauge and restart and power off from iOS have not been run on a phone at all.</p>
+    <p class="src">Sources: scion-starlte <code>device.conf</code>, <code>README.md</code>, <code>docs/hardware-map.md</code>; scion-kernel <code>docs/ios27/INSTALL-S9.md</code> ("What works on iOS 27 today", "The S9's hardware is on by default", "Known problems"), <code>docs/ios27/MODEM-IOS.md</code>, <code>SENSORS.md</code>, <code>SILEO.md</code>, <code>KEYSTORE.md</code>, <code>tools/ios27/audio-bt/README.md</code>, <code>README.md</code>; pull requests scion-kernel 300, 302, 309, 310; xnu 11, 22, 23, 26, 27; scion-starlte 62, 65.</p>
   </article>
 
-  <div class="two">
-    <article class="device">
-      <div class="dev-head">
-        <h3>Galaxy S9+ <small>SM-G965F · star2lte</small></h3>
-        <span class="pill amber">Testers wanted</span>
-      </div>
-      <p>Same SoC; written but never run. Its first image boots a minimal configuration and returns to TWRP after 120 s with a log. Send us that log.</p>
-      <p class="links"><a href="https://github.com/Scion-Project/scion-star2lte">scion-star2lte →</a></p>
-    </article>
-    <article class="device">
-      <div class="dev-head">
-        <h3>Galaxy Note9 <small>SM-N960F · crownlte</small></h3>
-        <span class="pill amber">Testers wanted</span>
-      </div>
-      <p>Same as the S9+: the device repo is written, nobody has booted it yet. Your first run is the first.</p>
-      <p class="links"><a href="https://github.com/Scion-Project/scion-crownlte">scion-crownlte →</a></p>
-    </article>
+  <div class="pair">
+  <article class="phone" aria-labelledby="s9p-title">
+    <header class="phone-head">
+      <h3 id="s9p-title">Galaxy S9+ <small>SM-G965F · star2lte · Exynos 9810</small></h3>
+      <p>Run by Anan Jaser on his own phone, a Korean SM-G965N, with iOS 16.5 from his own build, up to 12 November.</p>
+    </header>
+    <ul class="plain">
+      <li><span class="st seen">Seen on a phone</span> display, all eight cores, touch, storage, Wi-Fi, battery, temperatures, the USB console. In part: the GPU, the speakers, Bluetooth, the rear, telephoto and front cameras, the accelerometer and gyroscope.</li>
+      <li><span class="st none">Not built</span> mobile network.</li>
+      <li><span class="st built">Built, not yet run</span> the installer's S9+ image: nobody has reported running it. The installer refuses the Korean models unless it is built with <code>-N</code>.</li>
+      <li>iOS 27: not tried on this phone.</li>
+    </ul>
+    <p class="src">Sources: scion-star2lte <code>device.conf</code>; scion-kernel <code>README.md</code> (Contributors), <code>docs/ios27/INSTALL-S9.md</code>; scion-installer <code>README.md</code>.</p>
+    <p class="links"><a href="https://github.com/Scion-Project/scion-star2lte">scion-star2lte</a></p>
+  </article>
+
+  <article class="phone" aria-labelledby="n9-title">
+    <header class="phone-head">
+      <h3 id="n9-title">Galaxy Note9 <small>SM-N960F · crownlte · Exynos 9810</small></h3>
+      <p>The same chips as the S9 by Samsung's device trees. Nothing has run on a Note9.</p>
+    </header>
+    <ul class="plain">
+      <li><span class="st built">Built, not yet run</span> iOS 16.5: the installer makes a Note9 image whose first run collects a log for two minutes and returns to TWRP. If you have one, that log is the most useful thing you can send.</li>
+      <li>iOS 27: not tried on this phone.</li>
+    </ul>
+    <p class="src">Source: scion-crownlte <code>device.conf</code>, <code>README.md</code>.</p>
+    <p class="links"><a href="https://github.com/Scion-Project/scion-crownlte">scion-crownlte</a></p>
+  </article>
   </div>
 
-  <article class="device">
-    <div class="dev-head">
-      <h3>Pixel 10 <small>Tensor G5 · frankel</small></h3>
-      <span class="pill blue">Virtualised</span>
+  <article class="phone" aria-labelledby="p10-title">
+    <header class="phone-head">
+      <h3 id="p10-title">Pixel 10 <small>frankel · Tensor G5</small></h3>
+      <p>Two routes: a virtual machine inside Android, and the bare metal.</p>
+    </header>
+    <div class="table-wrap" role="region" aria-labelledby="p10-cap" tabindex="0">
+    <table class="status">
+      <caption id="p10-cap">Pixel 10: each route and how far it has run</caption>
+      <thead><tr><th scope="col">Route</th><th scope="col">State</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">iOS 16.5 in a virtual machine on Android's own hypervisor (the Scion app, AVF and pKVM)</th>
+          <td><span class="st seen">Seen on a phone</span> the home screen in about 80 seconds; touch was still being fixed at the last status (22 October). There is no ready-made install for other owners</td></tr>
+        <tr><th scope="row">iOS 14 on an emulated iPhone 11 (the Scion app with Pyre, a fork of ChefKiss's Inferno)</th>
+          <td><span class="st seen">Seen on a phone</span> the home screen; slow, since every instruction goes through QEMU's JIT</td></tr>
+        <tr><th scope="row">iOS 27 on the bare metal (machine configuration FRANKEL, the S9's tree)</th>
+          <td><span class="st built">Built, not yet run</span> on a phone. In QEMU: eight cores started, iOS 27's <code>launchd</code> runs its boot tasks and stops at <code>mount-phase-1</code>, because the storage driver is read only on this SoC</td></tr>
+        <tr><th scope="row">iOS 16.5 on the bare metal</th>
+          <td><span class="st built">Built, not yet run</span> on a phone. In QEMU: to SpringBoard (6 November)</td></tr>
+        <tr><th scope="row">GPU, Wi-Fi, modem on the bare metal</th>
+          <td><span class="st none">Not built</span></td></tr>
+      </tbody>
+    </table>
     </div>
-    <p>A different route: XNU as a guest on Android's own hypervisor (AVF / pKVM), reaching the home screen in about 80 s, or fully emulated with <a href="https://github.com/Scion-Project/pyre">Pyre</a>, a Tensor-tuned fork of ChefKiss's Inferno. Both run from the <a href="https://github.com/Scion-Project/scion">Scion app</a>.</p>
-    <p class="links"><a href="https://github.com/Scion-Project/scion">scion →</a> <a href="https://github.com/Scion-Project/scion-avf">scion-avf →</a> <a href="https://github.com/Scion-Project/pyre">pyre →</a></p>
+    <p class="note">The Tensor G5's cores have pointer authentication and the newer instructions iOS 27 uses, so its port needs none of the S9's instruction rewriting. Testing on the bare metal needs an unlocked boot loader, and unlocking a Pixel erases it.</p>
+    <p class="src">Sources: scion <code>README.md</code>; scion-kernel <code>docs/ios27/PIXEL10.md</code>; xnu pull request 24; scion-frankel <code>README.md</code>, <code>device.conf</code>.</p>
+    <p class="links"><a href="https://github.com/Scion-Project/scion">scion</a> <a href="https://github.com/Scion-Project/scion-frankel">scion-frankel</a> <a href="https://github.com/Scion-Project/scion-soc-lga">scion-soc-lga</a> <a href="https://github.com/Scion-Project/pyre">pyre</a></p>
   </article>
 </section>
 
-<section id="boot">
-  <h2>How it boots</h2>
-  <p class="sub">No Android, no Linux, nothing emulated. Each stage hands the hardware to the next.</p>
-  <ol class="chain">
-    <li><b>S-Boot</b><span>Samsung's bootloader, unlocked. Loads our boot image from <code>BOOT</code>.</span></li>
-    <li><b>UEFI</b><span>Project Silicium's open <code>starltePkg</code>, with Carbon Hypervisor at EL2 handling PSCI.</span></li>
-    <li><b>xnuloader</b><span>Our loader: moves the payload, fences off modem and DSP memory, and builds the device tree.</span></li>
-    <li><b>XNU</b><span>Apple's open-source kernel with our patch and drivers, on GIC-400 and six cores.</span></li>
-    <li><b>iOS 16.5</b><span>launchd, then SpringBoard, from the system image on <code>SYSTEM</code>.</span></li>
-  </ol>
+<section id="versions" aria-labelledby="versions-title">
+  <h2 id="versions-title">iOS 16.5 and iOS 27</h2>
+  <p>Two lines, one kernel tree. iOS 16.5 is the one with an installer and the longer record; iOS 27 is newer, needs more work to build, and runs on the S9 only.</p>
+  <div class="table-wrap" role="region" aria-labelledby="ver-cap" tabindex="0">
+  <table class="compare">
+    <caption id="ver-cap">What differs between the two lines</caption>
+    <thead><tr><th scope="col"></th><th scope="col">iOS 16.5</th><th scope="col">iOS 27</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">The restore image you supply</th><td>iPhone X (iPhone10,3 and 10,6), 16.5, build 20F66</td><td>iPhone 11 (iPhone12,1), 27.0.1, build 24A446; no other build</td></tr>
+      <tr><th scope="row">The kernel</th><td>xnu-8796.121.2 with Scion's drivers</td><td>xnu-12377, Scion-Project/xnu, with the same drivers and the S9 layer of Project Starbite</td></tr>
+      <tr><th scope="row">Phones</th><td>Galaxy S9; the S9+ run by a contributor; Note9 images untried</td><td>Galaxy S9 (SM-G960F) only</td></tr>
+      <tr><th scope="row">Installing</th><td>A TWRP zip you build with <code>scion-installer</code>. It writes <code>SYSTEM</code> and <code>BOOT</code>; Android's data stays unless you ask for a kept <code>/private/var</code>, which formats USERDATA</td><td>A boot image and a root of about 20 GiB that you build from source, written to <code>BOOT</code> and <code>USERDATA</code> from TWRP over USB. It erases Android's data</td></tr>
+      <tr><th scope="row">The processor</th><td>iOS 16.5 is plain arm64, which the S9's cores run</td><td>iOS 27 is built for newer processors; the build rewrites those instructions ahead of time and the kernel emulates the rest</td></tr>
+      <tr><th scope="row">Drawing</th><td>OpenGL ES through Panfrost</td><td>OpenGL ES, or Metal through PanVK with Liquid Glass</td></tr>
+      <tr><th scope="row">Passcode</th><td>Keychain items under a key from your passcode; files not encrypted</td><td>None in the documented build</td></tr>
+      <tr><th scope="row">Back to Android</th><td>Restore your Boot and System backups</td><td>Flash Android's boot image back, then Format Data in TWRP</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="src">Sources: scion-installer <code>README.md</code>; scion-kernel <code>docs/ios27/INSTALL-S9.md</code>, <code>docs/two-bases.md</code>, <code>NOTICE</code>; scion-starlte <code>README.md</code>.</p>
 </section>
 
-<section id="install">
-  <h2>Install on a Galaxy S9</h2>
+<section id="try" aria-labelledby="try-title">
+  <h2 id="try-title">How to try it</h2>
   <div class="callout">
-    <b>Why there's no download button.</b> The installer contains iOS's own files, taken from an IPSW. We can't distribute those and neither can you, so you build the installer yourself. It's yours: don't share it.
+    <b>Why there is no download button.</b> An image contains iOS's own files, taken from a restore image. We cannot distribute those and neither can you, so you build it yourself, from an IPSW you download from Apple. It is yours: do not share it.
   </div>
 
-  <div class="two">
-    <div>
-      <h3>You need</h3>
-      <ul class="need">
-        <li>Galaxy S9 / S9+ / Note9, Exynos (<code>G960F</code>, <code>G965F</code>, <code>N960F</code>, FD models OK)</li>
-        <li>Unlocked bootloader and TWRP</li>
-        <li>A Mac (or Linux) with about 20 GB free, to build</li>
-        <li>The iOS 16.5 IPSW for iPhone10,3/10,6 (<code>20F66</code>), downloaded yourself from Apple</li>
-      </ul>
-    </div>
-    <div>
-      <h3>Not supported</h3>
-      <ul class="need neg">
-        <li>Snapdragon and Korean (<code>N</code>) models</li>
-        <li>Apple ID, iCloud, App Store, iMessage</li>
-        <li>Anything that makes the phone pass as an iPhone to Apple</li>
-      </ul>
-    </div>
-  </div>
-
-  <h3>Steps</h3>
-  <ol class="steps">
-    <li><b>Back up.</b> In TWRP, back up <code>Boot</code>, <code>System</code> and <code>EFS</code>, and copy the backup off the phone. EFS holds your IMEI.</li>
-    <li><b>Build</b> on your computer, in one command (about 20 minutes and 20 GB of free disk):
+  <div class="ways">
+  <article class="way" aria-labelledby="way165">
+    <h3 id="way165">iOS 16.5 on a Galaxy S9: the installer</h3>
+    <p>You need an Exynos Galaxy S9 (<code>G960F</code>, FD models too) with an unlocked boot loader and TWRP, a Mac or Linux machine with about 20 GB free, and the iOS 16.5 IPSW for iPhone10,3/10,6 (<code>20F66</code>), downloaded yourself.</p>
+    <ol class="steps">
+      <li><b>Back up.</b> In TWRP, back up <code>Boot</code>, <code>System</code> and <code>EFS</code>, and copy the backup off the phone. EFS holds your IMEI.</li>
+      <li><b>Build</b> (about 20 minutes):
 <pre><code>git clone https://github.com/Scion-Project/scion-installer
 cd scion-installer
 ./build-installer.sh --ipsw /path/to/iPhone10,3,iPhone10,6_16.5_20F66_Restore.ipsw</code></pre>
-<span class="note">Add <code>--device star2lte</code>, <code>crownlte</code> or <code>all</code> for the S9+ and Note9. It checks your IPSW, lists any missing tools with the command to install them (macOS: Xcode command-line tools + <code>brew install sevenzip lld llvm bison meson ninja</code>), and writes the zip and its SHA-256 to <code>./out</code>. It downloads nothing from Apple. <a href="https://github.com/Scion-Project/scion-installer#readme">Details and troubleshooting</a>.</span></li>
-    <li><b>Flash.</b> Copy the zip to a microSD card or to <code>/sdcard</code> with <code>adb push</code> (<code>adb sideload</code> can't take a zip over 2 GB), then in TWRP go to Install, pick the zip and swipe. It checks the model, writes <code>SYSTEM</code> and <code>BOOT</code>, and verifies both by SHA-256. It refuses to touch EFS, the modem or recovery.</li>
-    <li><b>Reboot</b> to System.</li>
-  </ol>
-  <p class="sub"><b>Leaving:</b> hold five fingers on the screen for 1.5 s to restart into TWRP with the log, or force-restart with Vol Down + Power. Restore your Boot and System backups to get Android back.</p>
-  <p class="sub"><b>iOS 27 (experimental, Galaxy S9 SM-G960F only).</b> The installer above is iOS 16.5. iOS 27 also starts on the S9, from a kernel and a system image you build yourself from source and your own iPhone 11 restore image; there is no installer zip for it. It erases the phone, it has no Wi-Fi, sound, Bluetooth or cellular, and it can hang. The steps, what works and how to get back: <a href="https://github.com/Scion-Project/scion-kernel/blob/main/docs/ios27/INSTALL-S9.md">iOS 27 on a Galaxy S9: build it and install it yourself</a>.</p>
-</section>
+      It checks your IPSW, lists any missing tools with the command to install them, downloads nothing from Apple, and writes the zip and its SHA-256 to <code>./out</code>. <code>--device star2lte</code>, <code>crownlte</code> or <code>all</code> adds the S9+ and Note9 test images.</li>
+      <li><b>Flash.</b> Copy the zip to a microSD card or to <code>/sdcard</code> with <code>adb push</code> (<code>adb sideload</code> cannot take a zip over 2 GB), then install it in TWRP. It checks the model, writes <code>SYSTEM</code> and <code>BOOT</code>, verifies both, and refuses to touch EFS, the modem or recovery.</li>
+      <li><b>Reboot</b> to System.</li>
+    </ol>
+    <p class="note"><b>Leaving:</b> hold five fingers on the screen for 1.5 seconds to restart into TWRP with the log, or force a restart with Vol Down + Power. Restore your Boot and System backups to get Android back.</p>
+    <p class="links"><a href="https://github.com/Scion-Project/scion-installer#readme">Installer: details and troubleshooting</a></p>
+  </article>
 
-<section id="source">
-  <h2>Source</h2>
-  <div class="repos">
-    <a href="https://github.com/Scion-Project/scion-kernel"><b>scion-kernel</b><span>XNU port, drivers, loader, tools · APSL 2.0 / MIT</span></a>
-    <a href="https://github.com/Scion-Project/scion-starlte"><b>scion-starlte</b><span>Galaxy S9: UEFI, configs, porting record</span></a>
-    <a href="https://github.com/Scion-Project/scion-installer"><b>scion-installer</b><span>TWRP installers, tooling only</span></a>
-    <a href="https://github.com/Scion-Project/scion-recovery"><b>scion-recovery</b><span>TWRP with APFS / HFS+ tools and log capture</span></a>
-    <a href="https://github.com/Scion-Project/android_kernel_samsung_exynos9810"><b>android_kernel_samsung_exynos9810</b><span>The BSP the drivers' facts come from</span></a>
-    <a href="https://github.com/Scion-Project/scion"><b>scion</b><span>The Pixel 10 app</span></a>
+  <article class="way" aria-labelledby="way27">
+    <h3 id="way27">iOS 27 on a Galaxy S9: the documented build</h3>
+    <p>No installer: you build the kernel, the boot image and the root on an Apple silicon Mac with about 110 GB free, Xcode 16.4, the Kernel Debug Kit 26.5 and the iPhone 11 restore image 24A446, then write them from TWRP over USB.</p>
+    <ul class="plain">
+      <li><b>It erases Android's data.</b> Android's system partition, TWRP and the boot loader are not touched.</li>
+      <li>The kernel, the loader, the boot image and the instruction rewrite have been run from a clean clone. The graphics libraries and the last steps of the root have not; expect to find a mistake there, and please report it.</li>
+      <li>The root steps that let iOS use Wi-Fi, the sensors, audio, Bluetooth and the modem are separate scripts the one-command root build does not run yet.</li>
+      <li>It can hang. The kernel returns to TWRP by itself 24 hours after every boot.</li>
+    </ul>
+    <p class="links"><a href="https://github.com/Scion-Project/scion-kernel/blob/main/docs/ios27/INSTALL-S9.md">iOS 27 on a Galaxy S9: build it and install it yourself</a></p>
+  </article>
+
+  <article class="way" aria-labelledby="wayp10">
+    <h3 id="wayp10">Pixel 10: the Scion app</h3>
+    <p>An Android app that starts an emulated iPhone 11 (iOS 14, through Pyre) or Scion's kernel in a virtual machine on the phone's own hypervisor. For the emulator you prepare the virtual machine on a Mac by following the upstream Inferno guide; the app does not automate it, and nothing of Apple's is shipped with it.</p>
+    <p>The bare-metal port has nothing to install yet: it has not been run on a phone, and testing it needs an unlocked boot loader, which erases the phone.</p>
+    <p class="links"><a href="https://github.com/Scion-Project/scion/blob/main/docs/PHONE-QUICKSTART.md">The app's quick start</a> <a href="https://github.com/Scion-Project/scion-frankel#readme">The bare-metal port</a></p>
+  </article>
   </div>
 
-  <h3>Exynos 9810 drivers</h3>
-  <p class="sub">Written fresh for XNU from the hardware facts in Samsung's GPL BSP. No Linux code copied in.</p>
-  <div class="drivers">
-    <div><h4>Display &amp; GPU</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/gpu/hakios.exynos_dpu.c">exynos_dpu</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/gpu/hakios.s6e3ha8.c">s6e3ha8</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/gpu/hakios.mali.c">mali</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/gpu/hakios.backlight.cpp">backlight</a></div>
-    <div><h4>CPU &amp; SoC</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/core/hakios.exynos_m3.c">exynos_m3</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/core/hakios.exynos_acpm.c">exynos_acpm</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/power/hakios.exynos_cpufreq.c">exynos_cpufreq</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/power/hakios.exynos_tmu.c">exynos_tmu</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/core/hakios.exynos_hsi2c.c">exynos_hsi2c</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/core/hakios.exynos_spi.c">exynos_spi</a></div>
-    <div><h4>Storage</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/storage/hakios.ufshc.c">ufshc</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/storage/hakios.ext4.c">ext4</a></div>
-    <div><h4>Input &amp; sensors</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/input/hakios.s6sy761.c">s6sy761</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/input/hakios.exynos_keys.c">exynos_keys</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/input/hakios.ssp.c">ssp</a></div>
-    <div><h4>Power</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/power/hakios.max77705.c">max77705</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/power/hakios.s2mps18_rtc.c">s2mps18_rtc</a></div>
-    <div><h4>USB</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/core/hakios.dwc3.c">dwc3</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/core/hakios.exynos_usb.c">exynos_usb</a></div>
-    <div><h4>Wi-Fi</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/wifi/hakios.exynos_pcie.c">exynos_pcie</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/wifi/hakios.brcmfmac.c">brcmfmac</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/wifi/hakios.sta.c">sta</a></div>
-    <div><h4>Bluetooth</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/bluetooth/hakios.bcm4361_bt.c">bcm4361_bt</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/bluetooth/hakios.bt.c">bt</a></div>
-    <div><h4>Audio</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/audio/hakios.exynos_abox.c">exynos_abox</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/audio/hakios.max98512.c">max98512</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/audio/hakios.cs47l93.c">cs47l93</a></div>
-    <div><h4>Camera</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/camera/hakios.exynos_camera.c">exynos_camera</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/camera/hakios.s2mpb02_torch.c">s2mpb02_torch</a></div>
+  <h3 class="sub-h">How the S9 starts</h3>
+  <div class="chains">
+    <div>
+      <p class="chain-label">iOS 16.5</p>
+      <ol class="chain">
+        <li><b>S-Boot</b><span>Samsung's boot loader, unlocked</span></li>
+        <li><b>UEFI</b><span>Project Silicium's <code>starltePkg</code>, Carbon Hypervisor at EL2</span></li>
+        <li><b>xnuloader</b><span>Scion's loader: builds the device tree, fences off the modem's memory</span></li>
+        <li><b>XNU</b><span>xnu-8796 with Scion's drivers</span></li>
+        <li><b>iOS 16.5</b><span>from <code>SYSTEM</code></span></li>
+      </ol>
+    </div>
+    <div>
+      <p class="chain-label">iOS 27</p>
+      <ol class="chain">
+        <li><b>S-Boot</b><span>Samsung's boot loader, unlocked</span></li>
+        <li><b>Loader</b><span>Project Starbite's, in <code>BOOT</code>, carrying the kernel and the device tree</span></li>
+        <li><b>XNU</b><span>xnu-12377, the S9 configuration</span></li>
+        <li><b>iOS 27</b><span>from <code>USERDATA</code></span></li>
+      </ol>
+    </div>
   </div>
-  <p class="sub">Deep dives: <a href="https://github.com/Scion-Project/scion-starlte/blob/main/WIFI.md">Wi-Fi</a> · <a href="https://github.com/Scion-Project/scion-starlte/blob/main/AUDIO.md">Audio</a> · <a href="https://github.com/Scion-Project/scion-starlte/blob/main/CAMERA.md">Camera</a> · <a href="https://github.com/Scion-Project/scion-starlte/blob/main/GPU.md">GPU</a> · <a href="https://github.com/Scion-Project/scion-starlte/blob/main/BLUETOOTH.md">Bluetooth</a> · <a href="https://github.com/Scion-Project/scion-starlte/blob/main/SENSORS.md">Sensors</a></p>
 </section>
 
-<section id="progress">
-  <h2>Progress</h2>
-  <ul class="timeline">
-    <li><time>4 Nov 2026</time><span>All eight cores and 3.2 GB of RAM by default. Passcode lock. Hardware H.264 and HEVC decode through the phone's video block (AVPlayer at 17% of a core, down from 63%), on by default on the S9. A long-standing GPU crash fixed. Kinibi, the phone's secure OS, started under XNU. A one-command installer build.</span></li>
-    <li><time>3 Nov 2026</time><span>Zero-copy display fixed: the window server's frames are scanned out directly, with no flashing. Bluetooth pairing hang found and patched (in test). Iris camera driver written.</span></li>
-    <li><time>2 Nov 2026</time><span>Native UFS with persistent <code>/var</code>, Wi-Fi joined from Settings, speakers, front camera live in the stock Camera app, brightness slider, touch-boosted CPU governor.</span></li>
-    <li><time>1 Nov 2026</time><span>iOS 16.5 reaches SpringBoard on the Galaxy S9: six cores, Mali GPU through Panfrost, touch, battery.</span></li>
-    <li><time>Next</time><span>Hardware-bound keys, file encryption, biometrics through the secure OS, Bluetooth audio, Metal, then S9+ and Note9 bring-up.</span></li>
+<section id="now" aria-labelledby="now-title">
+  <h2 id="now-title">Being worked on now</h2>
+  <ul class="cards">
+    <li><h3>Power</h3><p>The phone never sleeps. An idle core waits powered, no power domain is switched off when idle, and the buses run at the rates the boot loader left. It is the largest gap in what Scion drives of the S9.</p><p class="src">scion-starlte <code>docs/hardware-map.md</code>, "Power"</p></li>
+    <li><h3>Frame rate under Metal</h3><p>With the Metal compositor, swiping the home screen keeps 43 to 67 % of frames on time and scrolling inside an app about 95 %. Rotation with the Metal compositor freezes the screen.</p><p class="src">scion-kernel <code>docs/ios27/INSTALL-S9.md</code>, "Known problems", "What works"</p></li>
+    <li><h3>The iOS side of 17 November</h3><p>The S9's hardware is on by default in the iOS 27 kernel. What iOS needs on top (the sensors' library, Wi-Fi's firmware and service, the audio and Bluetooth step, the cellular daemon) is still separate root steps, and the image with everything on has not yet been run on a phone.</p><p class="src">scion-kernel <code>docs/ios27/INSTALL-S9.md</code>, "The S9's hardware is on by default"</p></li>
   </ul>
 </section>
 
-<section id="faq">
-  <h2>FAQ</h2>
-  <details><summary>Is this an emulator?</summary><p>No. On the S9 the XNU kernel runs directly on the phone's CPU cores, with drivers for its real hardware. Only the Pixel 10 route uses a hypervisor or emulator.</p></details>
-  <details><summary>Can I use the App Store, iCloud or iMessage?</summary><p>No, and that isn't a goal. Nothing here makes a phone pass as an iPhone to Apple's servers.</p></details>
-  <details><summary>Why can't I just download an image?</summary><p>An image contains iOS's own files, which only Apple may distribute. You build yours from an IPSW you get yourself, and it stays yours.</p></details>
-  <details><summary>Can I go back to Android?</summary><p>Yes: restore the Boot and System backups you took in TWRP. The installer never touches EFS, the modem or recovery.</p></details>
-  <details><summary>Is the passcode real security?</summary><p>Not yet. Partly. On the S9, keychain items are now encrypted under a key derived from your passcode, and forgetting the passcode loses them. Files aren't encrypted, there's no hardware-bound key yet so a short code can be guessed offline from a flash dump, and an unlocked bootloader lets anyone with the phone flash a modified kernel. Don't rely on it to protect serious secrets.</p></details>
-  <details><summary>Does it work on the Snapdragon S9?</summary><p>No. Only the Exynos 9810 models (G960F, G965F, N960F, and FD variants).</p></details>
-  <details><summary>How can I help?</summary><p>If you have an S9+ or a Note9, run the first test image and send us the log. Code, docs and driver reviews are welcome on <a href="https://github.com/Scion-Project">GitHub</a>.</p></details>
-</section>
-
-<section id="credits">
-  <h2>Built on</h2>
-  <div class="credits">
-    <a href="https://github.com/oosexgang"><b>HakiOS</b><span>the original XNU-on-Android port</span></a>
-    <a href="https://github.com/ChefKissInc"><b>ChefKiss</b><span>Inferno, the Apple-silicon QEMU</span></a>
-    <a href="https://github.com/Project-Silicium"><b>Project Silicium</b><span>Mu-Silicium UEFI and Carbon Hypervisor</span></a>
-    <a href="https://github.com/ExyHyperBrick"><b>ExyHyperBrick &amp; LineageOS</b><span>the Exynos 9810 BSP</span></a>
-    <a href="https://gitlab.freedesktop.org/mesa/mesa"><b>Mesa</b><span>Panfrost, for the Mali GPU</span></a>
+<section id="problems" aria-labelledby="problems-title">
+  <h2 id="problems-title">Known problems</h2>
+  <div class="cols two">
+    <div>
+      <h3>iOS 27</h3>
+      <ul>
+        <li><b>It can hang hard</b>, console included, some minutes into a session; the cause is not found. Volume Down + Power for about ten seconds gets out of it.</li>
+        <li>It is slow in places, and the first picture takes 18 to 40 seconds.</li>
+        <li>The lock screen's clock is not drawn, and the wallpaper picker does not work.</li>
+        <li>A few system services and widget extensions crash at start.</li>
+        <li>Only build 24A446 works; another restore image is refused.</li>
+        <li>No passcode in the documented build.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>iOS 16.5</h3>
+      <ul>
+        <li>One tester has reported the phone restarting by itself. The cause is not known yet.</li>
+        <li>No rear cameras, and no headphones.</li>
+        <li>Settings are lost at each restart unless USERDATA is formatted for Scion, which erases Android's data.</li>
+        <li>The passcode protects keychain items only. Your files are not encrypted, and a short code can be guessed offline by anyone who reads the flash.</li>
+      </ul>
+    </div>
   </div>
+  <h3>Both</h3>
+  <ul>
+    <li>No calls and no SMS. The phone never sleeps.</li>
+    <li>No App Store, Apple ID, iCloud or iMessage, and that is not a goal. Nothing here makes a phone pass as an iPhone to Apple.</li>
+    <li>Snapdragon models are not supported.</li>
+  </ul>
 </section>
 
-<section id="legal" class="legal">
-  <h2>Legal</h2>
+<section id="report" aria-labelledby="report-title">
+  <h2 id="report-title">Report a problem, or that it worked</h2>
+  <p>Save the logs in TWRP right after the problem, before anything else, then <a href="https://github.com/Scion-Project/scion-kernel/issues/new/choose">open an issue</a> with your phone's model and the log, or a tester report if it worked. <a href="https://github.com/Scion-Project/scion-kernel#send-logs">How to save the logs</a>. Never attach an installer, a system image, a root image or an IPSW: they contain Apple's files.</p>
+  <p>If you have an S9+ or a Note9, the first-run log is the most useful thing you can send. Code, documentation and driver reviews are welcome on <a href="https://github.com/Scion-Project">GitHub</a>.</p>
+</section>
+
+<section id="source" aria-labelledby="source-title">
+  <h2 id="source-title">The repositories</h2>
+  <ul class="repos">
+    <li><a href="https://github.com/Scion-Project/scion-kernel"><b>scion-kernel</b><span>The shared drivers, the loader, the tools, the documentation, the iOS 16.5 kernel build and the recipe for the iOS 27 one. A fork of HakiOS</span></a></li>
+    <li><a href="https://github.com/Scion-Project/xnu"><b>xnu</b><span>Scion's fork of Apple's XNU: the iOS 27 kernel (<code>scion/xnu-12377</code>), the S9 and the Pixel 10 as two machine configurations</span></a></li>
+    <li><a href="https://github.com/Scion-Project/scion-installer"><b>scion-installer</b><span>Builds the iOS 16.5 TWRP installer on your computer; tooling only</span></a></li>
+    <li><a href="https://github.com/Scion-Project/scion-starlte"><b>scion-starlte</b><span>Galaxy S9: configuration, UEFI, status and porting record</span></a></li>
+    <li><a href="https://github.com/Scion-Project/scion-star2lte"><b>scion-star2lte</b><span>Galaxy S9+: run by a contributor on iOS 16.5</span></a></li>
+    <li><a href="https://github.com/Scion-Project/scion-crownlte"><b>scion-crownlte</b><span>Galaxy Note9: written, not yet run</span></a></li>
+    <li><a href="https://github.com/Scion-Project/scion-frankel"><b>scion-frankel</b><span>Pixel 10 on the bare metal: QEMU only so far</span></a></li>
+    <li><a href="https://github.com/Scion-Project/scion-soc-lga"><b>scion-soc-lga</b><span>The Tensor G5's layer and boot shim</span></a></li>
+    <li><a href="https://github.com/Scion-Project/scion"><b>scion</b><span>The Pixel 10 app: an emulator or a virtual machine</span></a></li>
+    <li><a href="https://github.com/Scion-Project/pyre"><b>pyre</b><span>The app's emulator, a fork of ChefKiss's Inferno</span></a></li>
+    <li><a href="https://github.com/Scion-Project/scion-avf"><b>scion-avf</b><span>Research on Android's hypervisor for the app</span></a></li>
+    <li><a href="https://github.com/Scion-Project/scion-recovery"><b>scion-recovery</b><span>TWRP for the S9 with HFS Plus and APFS tools and log capture</span></a></li>
+  </ul>
+
+  <h3 class="sub-h">The S9's drivers</h3>
+  <p>Written for XNU from the hardware facts in Samsung's GPL kernel; no Linux code is copied in. Wi-Fi uses Linux's brcmfmac (ISC), fetched and built at build time on Scion's own layer.</p>
+  <div class="drivers">
+    <div><h4>Display and GPU</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/display/dpu/hakios.exynos_dpu.c">exynos_dpu</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/display/panel/hakios.s6e3ha8.c">s6e3ha8</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/gpu/mali/hakios.mali.c">mali</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/display/panel/hakios.backlight.cpp">backlight</a></div>
+    <div><h4>CPU and SoC</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/soc/exynos/hakios.exynos_m3.c">exynos_m3</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/soc/exynos/hakios.exynos_acpm.c">exynos_acpm</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/power/exynos/hakios.exynos_cpufreq.c">exynos_cpufreq</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/power/exynos/hakios.exynos_tmu.c">exynos_tmu</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/soc/exynos/hakios.exynos_hsi2c.c">exynos_hsi2c</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/soc/exynos/hakios.exynos_spi.c">exynos_spi</a></div>
+    <div><h4>Storage and video</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/storage/ufs/hakios.ufshc.c">ufshc</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/storage/hakios.ext4.c">ext4</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/media/mfc/hakios.exynos_mfc.c">exynos_mfc</a></div>
+    <div><h4>Input and sensors</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/input/touch/hakios.s6sy761.c">s6sy761</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/input/hakios.exynos_keys.c">exynos_keys</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/input/ssp/hakios.ssp.c">ssp</a></div>
+    <div><h4>Power</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/power/max77705/hakios.max77705.c">max77705</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/power/hakios.s2mps18_rtc.c">s2mps18_rtc</a></div>
+    <div><h4>USB</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/usb/hakios.dwc3.c">dwc3</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/usb/hakios.exynos_usb.c">exynos_usb</a></div>
+    <div><h4>Wi-Fi and Bluetooth</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/wifi/brcmfmac/hakios.exynos_pcie.c">exynos_pcie</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/wifi/brcmfmac/hakios.brcmfmac.c">brcmfmac</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/wifi/hakios.sta.c">sta</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/bluetooth/bcm4361/hakios.bcm4361_bt.c">bcm4361_bt</a></div>
+    <div><h4>Audio</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/audio/abox/hakios.exynos_abox.c">exynos_abox</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/audio/codec/hakios.max98512.c">max98512</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/audio/codec/hakios.cs47l93.c">cs47l93</a></div>
+    <div><h4>Modem and cameras</h4><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/modem/hakios.shannon.c">shannon</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/camera/exynos/hakios.exynos_camera.c">exynos_camera</a><a href="https://github.com/Scion-Project/scion-kernel/blob/main/drivers/camera/exynos/hakios.s2mpb02_torch.c">s2mpb02_torch</a></div>
+  </div>
+  <p class="note">Deep dives: <a href="https://github.com/Scion-Project/scion-starlte/blob/main/docs/hardware-map.md">the S9's hardware map</a> · <a href="https://github.com/Scion-Project/scion-starlte/blob/main/WIFI.md">Wi-Fi</a> · <a href="https://github.com/Scion-Project/scion-starlte/blob/main/AUDIO.md">Audio</a> · <a href="https://github.com/Scion-Project/scion-starlte/blob/main/CAMERA.md">Camera</a> · <a href="https://github.com/Scion-Project/scion-starlte/blob/main/GPU.md">GPU</a> · <a href="https://github.com/Scion-Project/scion-starlte/blob/main/BLUETOOTH.md">Bluetooth</a> · <a href="https://github.com/Scion-Project/scion-starlte/blob/main/SENSORS.md">Sensors</a> · <a href="https://github.com/Scion-Project/scion-kernel/tree/main/docs/ios27">iOS 27 notes</a></p>
+</section>
+
+<section id="progress" aria-labelledby="progress-title">
+  <h2 id="progress-title">Progress</h2>
+  <ol class="timeline" reversed>
+    <li><time datetime="2026-11-17">17 Nov 2026</time><span>The S9's sensors, Wi-Fi, audio, Bluetooth and modem switched on by default in the iOS 27 kernel: built together, not yet run on a phone together. The modem built into the iOS 16.5 kernel: not yet run under 16.5. Heat protection in the iOS 27 kernel: not yet run. The Pixel 10 joins the S9's iOS 27 tree as a second machine configuration.</span></li>
+    <li><time datetime="2026-11-14">14 Nov 2026</time><span>iOS 27 on the Pixel 10's bare metal, in QEMU: eight cores, iOS 27's launchd running its boot tasks.</span></li>
+    <li><time datetime="2026-11-13">13 Nov 2026</time><span>On an S9 with iOS 27: the modem registered on the network with a SIM in and carried data; Wi-Fi joined from iOS; Sileo opened and apt installed packages.</span></li>
+    <li><time datetime="2026-11-12">12 Nov 2026</time><span>The S9+ run by Anan Jaser on his own phone. On iOS 27, the S9's motion sensors and screen rotation. A page for building iOS 27 for the S9 yourself.</span></li>
+    <li><time datetime="2026-11-09">9 Nov 2026</time><span>iOS 27 on the S9 drawing through CoreAnimation's Metal renderer, with Liquid Glass.</span></li>
+    <li><time datetime="2026-11-08">8 Nov 2026</time><span>iOS 27 reaches the home screen on the Galaxy S9.</span></li>
+    <li><time datetime="2026-11-04">4 Nov 2026</time><span>iOS 16.5: all eight cores and 3.2 GB of RAM by default, a passcode, hardware H.264 and HEVC decoding, a one-command installer build.</span></li>
+    <li><time datetime="2026-11-02">2 to 3 Nov 2026</time><span>iOS 16.5: native storage with a kept <code>/private/var</code>, Wi-Fi from Settings, the speakers, the front camera, the brightness slider.</span></li>
+    <li><time datetime="2026-11-01">1 Nov 2026</time><span>iOS 16.5 reaches the home screen on the Galaxy S9.</span></li>
+  </ol>
+</section>
+
+<section id="faq" aria-labelledby="faq-title">
+  <h2 id="faq-title">Questions</h2>
+  <details><summary>Is this an emulator?</summary><p>Not on the Galaxy phones: the kernel runs directly on the phone's cores, with drivers for its own hardware. On the Pixel 10 the Scion app uses an emulator or Android's hypervisor; the bare-metal Pixel 10 port has run only in QEMU so far.</p></details>
+  <details><summary>Can I use the App Store, iCloud or iMessage?</summary><p>No, and that is not a goal. Nothing here makes a phone pass as an iPhone to Apple's servers.</p></details>
+  <details><summary>Why can't I just download an image?</summary><p>An image contains iOS's own files, which only Apple may distribute. You build yours from an IPSW you get yourself, and it stays yours.</p></details>
+  <details><summary>Can I go back to Android?</summary><p>Yes. On iOS 16.5, restore the Boot and System backups you took in TWRP; the installer never touches EFS, the modem or recovery. On iOS 27, flash Android's boot image back and format data in TWRP: Android starts as after a factory reset, because the install erased its data.</p></details>
+  <details><summary>Is the passcode real security?</summary><p>Not yet. On iOS 16.5 keychain items are encrypted under a key derived from your passcode, and forgetting it loses them, but files are not encrypted, there is no hardware-bound key, so a short code can be guessed offline from a flash dump, and an unlocked boot loader lets anyone with the phone flash a modified kernel. The iOS 27 build has no passcode at all. Do not rely on either to protect secrets.</p></details>
+  <details><summary>Does it work on the Snapdragon S9?</summary><p>No. Only the Exynos 9810 models.</p></details>
+</section>
+
+<section id="credits" aria-labelledby="credits-title">
+  <h2 id="credits-title">Who made it, and what it stands on</h2>
+  <ul class="credits">
+    <li><a href="https://github.com/oosexgang"><b>HakiOS</b><span>The XNU-on-Android port Scion's kernel is a fork of</span></a></li>
+    <li><b>Project Starbite</b><span>The iOS 27 port to the Galaxy S9: the S9 machine layer of the iOS 27 kernel and its loader</span></li>
+    <li><b>ios-sweet, ios-a5xelte, wardevsa</b><span>The layers under Starbite's: dipa-studio's ios-sweet, ios-a5xelte by orhunnx and its contributors, and wardevsa's Galaxy S7 layer</span></li>
+    <li><a href="https://github.com/ananjaser1211"><b>Anan Jaser</b><span>The Galaxy S9+ on real hardware, the processor's DVFS tables, location and GNSS, and many fixes</span></a></li>
+    <li><a href="https://github.com/dwaris"><b>Nils</b><span>An S9+ tester; two fixes for the speakers</span></a></li>
+    <li><b>Anders Madsen</b><span>ios-on-pixel-10, the facts about the Tensor G5 it proved</span></li>
+    <li><a href="https://github.com/ChefKissInc"><b>ChefKiss</b><span>Inferno, the Apple-silicon QEMU that Pyre forks</span></a></li>
+    <li><a href="https://github.com/Project-Silicium"><b>Project Silicium</b><span>Mu-Silicium UEFI and Carbon Hypervisor</span></a></li>
+    <li><a href="https://github.com/ExyHyperBrick"><b>ExyHyperBrick and LineageOS</b><span>The Exynos 9810 trees the drivers' facts come from</span></a></li>
+    <li><a href="https://gitlab.freedesktop.org/mesa/mesa"><b>Mesa</b><span>Panfrost and PanVK, for the Mali GPU</span></a></li>
+    <li><a href="https://github.com/UniXNU"><b>UniXNU</b><span>Designs and patches the iOS 27 kernel follows, and AdrenoMetal</span></a></li>
+    <li><a href="https://github.com/steelbrain/metal2vulkan"><b>metal2vulkan</b><span>The Metal-to-Vulkan bridge under the Metal path</span></a></li>
+    <li><a href="https://github.com/blacktop"><b>blacktop</b><span>darwin-xnu-build and ipsw</span></a></li>
+    <li><b>Procursus and Sileo</b><span>The package manager and its bootstrap</span></li>
+  </ul>
+  <p class="note">The full list, with each component's licence, is the kernel repository's <a href="https://github.com/Scion-Project/scion-kernel/blob/main/NOTICE"><code>NOTICE</code></a> and <a href="https://github.com/Scion-Project/scion-kernel/blob/main/THIRD_PARTY_LICENSES.md"><code>THIRD_PARTY_LICENSES.md</code></a>.</p>
+</section>
+
+<section id="legal" class="legal" aria-labelledby="legal-title">
+  <h2 id="legal-title">Legal</h2>
   <p>Scion is an independent open-source research project, <b>not affiliated with, endorsed by, or connected to Apple, Samsung or Google</b>. These repositories contain no Apple software: no IPSWs, binaries, caches, keys or screenshots. Images are built on your machine from software you obtain yourself. Whether you may run it on non-Apple hardware is your decision and depends on where you live; see <a href="https://github.com/Scion-Project/scion-kernel/blob/main/LEGAL.md">LEGAL.md</a>. Flashing can brick a phone, so back up first.</p>
 </section>
 
