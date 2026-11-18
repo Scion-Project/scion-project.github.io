@@ -1,0 +1,89 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: MIT-0 -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Privacy: crash reports · Scion</title>
+<meta name="description" content="What Scion's crash and boot reports would contain, what is removed on the phone before anything is sent, and where it goes. Opt-in, and planned, not yet shipped.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f6f8f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0e12" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to the content</a>
+
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="index.html"><img src="logo.svg" alt="" width="28" height="28"><span>Scion</span></a>
+    <nav aria-label="Sections">
+      <a href="index.html#aim">Aim</a>
+      <a href="index.html#phones">Phones</a>
+      <a href="index.html#try">Try it</a>
+      <a href="index.html#now">Now</a>
+      <a href="index.html#problems">Problems</a>
+      <a href="privacy.html" aria-current="page">Privacy</a>
+      <a class="gh" href="https://github.com/Scion-Project">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<section aria-labelledby="privacy-title">
+  <p class="eyebrow">Scion Project</p>
+  <h1 id="privacy-title">Privacy: crash reports</h1>
+  <p class="lede">Crash and boot reports are planned, and they are opt-in. Nothing is sent unless you say yes.</p>
+</section>
+
+<section aria-labelledby="ask-title">
+  <h2 id="ask-title">The question</h2>
+  <p>The installer asks one question: <b>"Send anonymous crash and boot reports to help Scion? Yes / No"</b>. You can change the answer later.</p>
+</section>
+
+<section aria-labelledby="contains-title">
+  <h2 id="contains-title">What a report contains</h2>
+  <ul>
+    <li>A summary of a crash or a boot: what failed, and where.</li>
+    <li>The build's hashes, so a report can be matched to the image that made it.</li>
+    <li>The phone model.</li>
+    <li>A random install ID.</li>
+  </ul>
+  <p>Nothing else is in a report.</p>
+</section>
+
+<section aria-labelledby="scrub-title">
+  <h2 id="scrub-title">What is removed on the phone first</h2>
+  <p>Before a report leaves the phone, it is scrubbed there of:</p>
+  <ul>
+    <li>serial numbers and the IMEI;</li>
+    <li>MAC and Bluetooth addresses;</li>
+    <li>Wi-Fi network names;</li>
+    <li>IP addresses;</li>
+    <li>email addresses and phone numbers;</li>
+    <li>location;</li>
+    <li>anything else that identifies the device.</li>
+  </ul>
+</section>
+
+<section aria-labelledby="where-title">
+  <h2 id="where-title">Where it goes, and how long it is kept</h2>
+  <p>Reports are sent over HTTPS to <code>https://claudiusthebot.duckdns.org/scion/report</code>. The server does not store IP addresses. Reports are deleted after 90 days.</p>
+</section>
+
+<section aria-labelledby="change-title">
+  <h2 id="change-title">Changing your answer</h2>
+  <p>Say No at install, or change the answer later. Nothing is sent unless the answer is Yes.</p>
+</section>
+
+</main>
+
+<footer>
+  <img src="logo.svg" alt="" width="20" height="20"> Scion Project · <a href="https://github.com/Scion-Project">github.com/Scion-Project</a> · <a href="index.html">Home</a>
+</footer>
+
+</body>
+</html>

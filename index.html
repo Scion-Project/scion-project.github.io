@@ -34,6 +34,7 @@
       <a href="#try">Try it</a>
       <a href="#now">Now</a>
       <a href="#problems">Problems</a>
+      <a href="privacy.html">Privacy</a>
       <a class="gh" href="https://github.com/Scion-Project">GitHub</a>
     </nav>
   </div>
@@ -128,7 +129,7 @@
           <td><span class="st seen">Seen on a phone</span> 9 November, in part: the chip brought up, iOS's Bluetooth stack ready. <span class="st built">Built, not yet run</span> as merged on 17 November</td></tr>
         <tr><th scope="row">Motion sensors, rotation</th>
           <td><span class="st seen">Seen on a phone</span> 3 November: orientation and proximity in iOS</td>
-          <td><span class="st seen">Seen on a phone</span> 12 November: accelerometer, gyroscope, the screen turning with the OpenGL ES compositor. With the Metal compositor a turn freezes the screen</td></tr>
+          <td><span class="st seen">Seen on a phone</span> 12 November: accelerometer, gyroscope, the screen turning with the OpenGL ES compositor. Landscape rotation with the Metal compositor fixed on 18 November</td></tr>
         <tr><th scope="row">Front camera</th>
           <td><span class="st seen">Seen on a phone</span> 3 November: in the stock Camera app, 30 frames a second</td>
           <td><span class="st none">Not built</span> for iOS: the kernel drives the sensor behind a switch that is off; no iOS app sees it</td></tr>
@@ -270,6 +271,7 @@ cd scion-installer
     <p>No installer: you build the kernel, the boot image and the root on an Apple silicon Mac with about 110 GB free, Xcode 16.4, the Kernel Debug Kit 26.5 and the iPhone 11 restore image 24A446, then write them from TWRP over USB.</p>
     <ul class="plain">
       <li><b>It erases Android's data.</b> Android's system partition, TWRP and the boot loader are not touched.</li>
+      <li><b>Starting.</b> Samsung's S-Boot starts Scion's boot loader from <code>BOOT</code>, which shows a menu with a countdown before it starts iOS 27. Three failed starts fall back to Scion recovery. Holding Bixby while starting iOS from the menu gives a verbose boot.</li>
       <li>The kernel, the loader, the boot image and the instruction rewrite have been run from a clean clone. The graphics libraries and the last steps of the root have not; expect to find a mistake there, and please report it.</li>
       <li>The root steps that let iOS use Wi-Fi, the sensors, audio, Bluetooth and the modem are separate scripts the one-command root build does not run yet.</li>
       <li>It can hang. The kernel returns to TWRP by itself 24 hours after every boot.</li>
@@ -301,7 +303,7 @@ cd scion-installer
       <p class="chain-label">iOS 27</p>
       <ol class="chain">
         <li><b>S-Boot</b><span>Samsung's boot loader, unlocked</span></li>
-        <li><b>Loader</b><span>Project Starbite's, in <code>BOOT</code>, carrying the kernel and the device tree</span></li>
+        <li><b>Boot loader</b><span>Scion's (<code>scion-boot-exynos9810</code>), in <code>BOOT</code>: a menu with a countdown, and a guard that falls back to recovery after three failed starts</span></li>
         <li><b>XNU</b><span>xnu-12377, the S9 configuration</span></li>
         <li><b>iOS 27</b><span>from <code>USERDATA</code></span></li>
       </ol>
@@ -313,7 +315,7 @@ cd scion-installer
   <h2 id="now-title">Being worked on now</h2>
   <ul class="cards">
     <li><h3>Power</h3><p>The phone never sleeps. An idle core waits powered, no power domain is switched off when idle, and the buses run at the rates the boot loader left. It is the largest gap in what Scion drives of the S9.</p><p class="src">scion-starlte <code>docs/hardware-map.md</code>, "Power"</p></li>
-    <li><h3>Frame rate under Metal</h3><p>With the Metal compositor, swiping the home screen keeps 43 to 67 % of frames on time and scrolling inside an app about 95 %. Rotation with the Metal compositor freezes the screen.</p><p class="src">scion-kernel <code>docs/ios27/INSTALL-S9.md</code>, "Known problems", "What works"</p></li>
+    <li><h3>Frame rate under Metal</h3><p>With the Metal compositor, swiping the home screen keeps 43 to 67 % of frames on time and scrolling inside an app about 95 %. Landscape rotation with the Metal compositor was fixed on 18 November.</p><p class="src">scion-kernel <code>docs/ios27/INSTALL-S9.md</code>, "Known problems", "What works"</p></li>
     <li><h3>The iOS side of 17 November</h3><p>The S9's hardware is on by default in the iOS 27 kernel. What iOS needs on top (the sensors' library, Wi-Fi's firmware and service, the audio and Bluetooth step, the cellular daemon) is still separate root steps, and the image with everything on has not yet been run on a phone.</p><p class="src">scion-kernel <code>docs/ios27/INSTALL-S9.md</code>, "The S9's hardware is on by default"</p></li>
   </ul>
 </section>
@@ -327,7 +329,7 @@ cd scion-installer
         <li><b>It can hang hard</b>, console included, some minutes into a session; the cause is not found. Volume Down + Power for about ten seconds gets out of it.</li>
         <li>It is slow in places, and the first picture takes 18 to 40 seconds.</li>
         <li>The lock screen's clock is not drawn, and the wallpaper picker does not work.</li>
-        <li>A few system services and widget extensions crash at start.</li>
+        <li>A few system services still crash at start. Widget extension crashes were fixed on 18 November.</li>
         <li>Only build 24A446 works; another restore image is refused.</li>
         <li>No passcode in the documented build.</li>
       </ul>
@@ -392,6 +394,7 @@ cd scion-installer
 <section id="progress" aria-labelledby="progress-title">
   <h2 id="progress-title">Progress</h2>
   <ol class="timeline" reversed>
+    <li><time datetime="2026-11-18">18 November 2026</time><span>Scion's boot loader (<code>scion-boot-exynos9810</code>) boots iOS 27 on the S9 from <code>BOOT</code>, after Samsung's S-Boot: a menu with a countdown, a guard that falls back to recovery after three failed starts, and the kernel marks a start good once SpringBoard has run for 20 seconds. Its splash has a few hidden extras. On iOS 27: Settings &gt; General &gt; About works; extension crashes are fixed; the Weather widget works; landscape rotation is fixed; Wi-Fi signal bars are fixed (being verified). Apple's services are no longer trimmed for speed: Scion keeps iOS intact and fixes the services instead. Only the daemons with no hardware on the S9 stay off: baseband, FairPlay SEP, ANE, UWB, the depth camera and AWDL. Scion recovery 4 is merged: it can no longer wipe or format USERDATA, text is no longer clipped, Home works on every page, and start-up is clean (<a href="https://github.com/Scion-Project/scion-recovery">scion-recovery</a>). Scion recovery 5, with Wi-Fi and an Install page that downloads and verifies an update over Wi-Fi, is in testing. Crash reporting is planned as opt-in: <a href="privacy.html">what it would send</a>.</span></li>
     <li><time datetime="2026-11-17">17 Nov 2026</time><span>The S9's sensors, Wi-Fi, audio, Bluetooth and modem switched on by default in the iOS 27 kernel: built together, not yet run on a phone together. The modem built into the iOS 16.5 kernel: not yet run under 16.5. Heat protection in the iOS 27 kernel: not yet run. The Pixel 10 joins the S9's iOS 27 tree as a second machine configuration.</span></li>
     <li><time datetime="2026-11-14">14 Nov 2026</time><span>iOS 27 on the Pixel 10's bare metal, in QEMU: eight cores, iOS 27's launchd running its boot tasks.</span></li>
     <li><time datetime="2026-11-13">13 Nov 2026</time><span>On an S9 with iOS 27: the modem registered on the network with a SIM in and carried data; Wi-Fi joined from iOS; Sileo opened and apt installed packages.</span></li>
@@ -443,7 +446,7 @@ cd scion-installer
 </main>
 
 <footer>
-  <img src="logo.svg" alt="" width="20" height="20"> Scion Project · <a href="https://github.com/Scion-Project">github.com/Scion-Project</a>
+  <img src="logo.svg" alt="" width="20" height="20"> Scion Project · <a href="https://github.com/Scion-Project">github.com/Scion-Project</a> · <a href="privacy.html">Privacy: crash reports</a>
 </footer>
 
 </body>
