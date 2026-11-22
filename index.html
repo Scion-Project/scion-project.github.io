@@ -28,6 +28,7 @@
   <div class="top-in">
     <a class="brand" href="#main"><img src="logo.svg" alt="" width="28" height="28"><span>Scion</span></a>
     <nav aria-label="Sections">
+      <a href="#install">Install</a>
       <a href="#aim">Aim</a>
       <a href="#phones">Phones</a>
       <a href="#versions">16.5 and 27</a>
@@ -49,11 +50,87 @@
   <p class="lede">Scion runs <b>XNU</b>, the kernel under iOS, directly on the <b>Galaxy S9</b>: no emulator and no Android underneath, with drivers written for the phone's own hardware. <b>iOS 16.5</b> and <b>iOS 27</b> both start on it, from one kernel tree built on two of Apple's XNU releases. A contributor has run it on the Galaxy S9+. On the <b>Pixel 10</b>, iOS 16.5 runs in a virtual machine through the Scion app, and a bare-metal iOS 27 port has so far run only in QEMU.</p>
   <p class="lede small">It is an experiment, not a finished system. You build every image yourself, on your own computer, from your own copy of iOS. These repositories contain no Apple software.</p>
   <div class="cta">
-    <a class="btn primary" href="#phones">What runs on each phone</a>
-    <a class="btn" href="#try">How to try it</a>
+    <a class="btn primary" href="#install">Install in 5 steps</a>
+    <a class="btn" href="#phones">What runs on each phone</a>
+    <a class="btn" href="#help">If something goes wrong</a>
     <a class="btn" href="https://github.com/Scion-Project/scion-kernel">The source</a>
   </div>
   <p class="etym"><i>scion</i> /ˈsaɪ.ən/: a cutting grafted onto another plant's rootstock.</p>
+</section>
+
+<section id="install" class="start" aria-labelledby="install-title">
+  <h2 id="install-title">Install on a Galaxy S9 in 5 steps</h2>
+  <p class="lead-in">For the <b>Galaxy S9, S9+ and Note9</b> (Exynos models). This puts <b>iOS 16.5</b> on the phone. It is an experiment: it can go wrong, so do step 1 first and do not skip it. Nobody has reported running this installer on an S9+ or a Note9 yet.</p>
+
+  <div class="need">
+    <h3>What you need</h3>
+    <ul>
+      <li>A Galaxy S9 (SM-G960F), S9+ (SM-G965F) or Note9 (SM-N960F) with an <b>unlocked bootloader</b> (the part of the phone that decides what software may start).</li>
+      <li><b>TWRP</b> installed as the phone's recovery (a small tool you start before Android, used to back up and install).</li>
+      <li>A <b>Linux or macOS computer</b> with about 20 GB free. On Windows, use WSL (Ubuntu 24.04). The build takes about 20 minutes on a fast Mac.</li>
+      <li>Your own copy of <b>iOS 16.5 for the iPhone X</b>, as an IPSW file (Apple's restore file). Download it from Apple through <a href="https://ipsw.me/iPhone10,3">ipsw.me</a>: pick iPhone X (iPhone10,3 / iPhone10,6), build <b>20F66</b>. The file is called <code>iPhone10,3,iPhone10,6_16.5_20F66_Restore.ipsw</code> and is 6 165 698 198 bytes. The build checks it and refuses any other file.</li>
+    </ul>
+    <p class="note">There is no ready-made download. The installer holds Apple's own files, which only Apple may hand out, so you build it on your own computer from your own IPSW. It is yours alone: never share it.</p>
+  </div>
+
+  <ol class="five">
+    <li>
+      <h3>Back up the phone</h3>
+      <p>Start TWRP. Back up <code>Boot</code>, <code>System</code> and <code>EFS</code>. Then copy the backup to your computer. EFS holds your phone's IMEI (its network identity), so keep that copy safe.</p>
+    </li>
+    <li>
+      <h3>Get the installer tool</h3>
+      <p>On your computer, open a terminal and run:</p>
+<pre><code>git clone https://github.com/Scion-Project/scion-installer
+cd scion-installer</code></pre>
+      <p>The tool needs some programs on your computer. If any are missing, the next step lists all of them with the command to install each one.</p>
+    </li>
+    <li>
+      <h3>Build your installer</h3>
+      <p>Stay <b>inside the <code>scion-installer</code> folder</b> and run this. Change the path to where your IPSW is, and the name after <code>--device</code> to your phone: <code>starlte</code> (S9), <code>star2lte</code> (S9+) or <code>crownlte</code> (Note9).</p>
+<pre><code>./build-installer.sh \
+  --ipsw ~/Downloads/iPhone10,3,iPhone10,6_16.5_20F66_Restore.ipsw \
+  --device starlte 2&gt;&amp;1 | tee ~/scion-run.log</code></pre>
+      <p>The <code>| tee ~/scion-run.log</code> part saves everything it prints to a file, in case you need to send it to us. If it stops with an error, fix what it says and run the same command again: it picks up where it stopped. When it finishes, your installer is <code>out/scion-exynos9810-installer.zip</code>. It is over 2 GB.</p>
+    </li>
+    <li>
+      <h3>Put the zip on the phone</h3>
+      <p><b>Do not use <code>adb sideload</code>.</b> TWRP's sideload cannot handle a file this big (it keeps the size in 32 bits) and nothing gets written. Use one of these:</p>
+      <ul>
+        <li><b>A microSD card</b> (simplest). Copy the zip to the card on your computer. In TWRP you will pick Micro SDCard as the storage.</li>
+        <li><b><code>adb push</code></b>, if TWRP can see the phone's internal storage and it has 3 GB free: <code>adb push out/scion-exynos9810-installer.zip /sdcard/</code></li>
+      </ul>
+    </li>
+    <li>
+      <h3>Install it in TWRP, then restart</h3>
+      <p>In TWRP choose <b>Install</b>, pick the zip, and swipe to confirm. When it is done, choose <b>Reboot</b> &gt; <b>System</b>. The first start of iOS is slow.</p>
+    </li>
+  </ol>
+
+  <div class="two">
+    <div class="box">
+      <h3>How to get out of iOS</h3>
+      <p>Either hold <b>five fingers on the screen for 1.5 seconds</b>. The phone restarts into TWRP and keeps its log. Or force a restart with <b>Volume Down + Power</b>.</p>
+    </div>
+    <div class="box">
+      <h3>How to go back to Android</h3>
+      <p>In TWRP, restore the <code>Boot</code> and <code>System</code> backups you made in step 1.</p>
+    </div>
+  </div>
+
+  <div class="callout help" id="help">
+    <h3>If something goes wrong</h3>
+    <ol>
+      <li><b>While building:</b> use the <code>| tee ~/scion-run.log</code> part from step 3, so the whole run is saved in <code>~/scion-run.log</code>. Each step also writes its own log in <code>scion-build/logs/</code> (inside the <code>scion-installer</code> folder). When a step fails, the tool prints the end of that log and its path.</li>
+      <li><b>On the phone:</b> save the logs <b>right away</b>, in TWRP, before anything else. A full power-off loses them. In TWRP's terminal (or <code>adb shell</code>) run:
+<pre><code>cp /sys/fs/pstore/* /sdcard/ 2&gt;/dev/null; cat /proc/last_kmsg &gt; /sdcard/last_kmsg.txt</code></pre>
+      If <code>/sdcard</code> is not there, use <code>/external_sd</code>, or <code>/tmp</code> and then <code>adb pull</code> the files.</li>
+      <li><b>Tell us:</b> <a href="https://github.com/Scion-Project/scion-kernel/issues/new?template=bug.yml">report a bug</a> with <code>last_kmsg.txt</code>, <code>scion-run.log</code> and your phone's model. If it worked, <a href="https://github.com/Scion-Project/scion-kernel/issues/new?template=tester-report.yml">send a tester report</a>: that helps too.</li>
+    </ol>
+    <p><b>Never attach or share the installer zip, the system image or the IPSW.</b> They contain Apple's files.</p>
+  </div>
+
+  <p class="note">The steps are taken from the <a href="https://github.com/Scion-Project/scion-installer#readme">installer's README</a> and the <a href="https://github.com/Scion-Project/scion-kernel#readme">kernel's README</a>. Below are the details for people who want them: what runs on each phone, other ways in, and what does not work yet (no rear cameras, no calls or SMS, no App Store).</p>
 </section>
 
 <section id="aim" aria-labelledby="aim-title">
@@ -243,7 +320,7 @@
 </section>
 
 <section id="try" aria-labelledby="try-title">
-  <h2 id="try-title">How to try it</h2>
+  <h2 id="try-title">All the ways to try it (technical)</h2>
   <div class="callout">
     <b>Why there is no download button.</b> An image contains iOS's own files, taken from a restore image. We cannot distribute those and neither can you, so you build it yourself, from an IPSW you download from Apple. It is yours: do not share it.
   </div>
