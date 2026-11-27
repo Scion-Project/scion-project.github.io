@@ -180,3 +180,17 @@ footer{text-align:center;color:var(--mute);font-size:.88rem;padding:28px 20px 40
   .phone{padding:16px}
 }
 @media print{.top{position:static}.btn,.cta{display:none}}
+
+/* Beginner install path */
+.start .lead-in{font-size:1.08rem;max-width:760px}
+.need,.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin:16px 0}
+.need h3,.box h3,.help h3{margin-top:0}
+.five{list-style:none;padding:0;margin:20px 0;counter-reset:five}
+.five>li{counter-increment:five;position:relative;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px 16px 64px;margin:12px 0}
+.five>li::before{content:counter(five);position:absolute;left:18px;top:16px;width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
+@media (prefers-color-scheme:dark){.five>li::before{color:#06110a}}
+.five h3{margin:0 0 6px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.help ol{padding-left:22px}
+.start pre{overflow-x:auto}
+@media (max-width:640px){.two{grid-template-columns:1fr}.five>li{padding:14px 14px 14px 54px}.five>li::before{left:12px}}
